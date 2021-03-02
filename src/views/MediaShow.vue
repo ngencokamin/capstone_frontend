@@ -69,6 +69,7 @@ export default {
   data: function() {
     return {
       media: {},
+      // voteValue: 0,
     };
   },
   created: function() {
@@ -77,6 +78,13 @@ export default {
       this.media = response.data;
     });
   },
-  methods: {},
+  methods: {
+    // createVote: function() {
+    //   var params = {
+    //     value: this.voteValue,
+    //   };
+    //   axios.post("/api/votes", params);
+    // },
+  },
 };
 </script>
