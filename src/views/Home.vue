@@ -2,7 +2,7 @@
   <div class="home">
     <div v-for="media in media" :key="media.id">
       <h2>{{ media.title }}</h2>
-      <img :src="media.poster" alt="Poster for current media" />
+      <img :src="media.poster" alt="Poster for listed media" />
       <p>
         <b>Rated {{ media.rated }} | Released: {{ media.released }}</b>
       </p>
