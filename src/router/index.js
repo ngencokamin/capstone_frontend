@@ -5,6 +5,7 @@ import Signup from "../views/Signup.vue";
 import Login from "../views/Login.vue";
 import Logout from "../views/Logout.vue";
 import MediaShow from "../views/MediaShow.vue";
+import UsersShow from "../views/UsersShow.vue";
 
 
 Vue.use(VueRouter);
@@ -27,6 +28,7 @@ const routes = [
   { path: "/login", name: "login", component: Login },
   { path: "/logout", name: "logout", component: Logout },
   { path: "/media/:id", name: "media-show", component: MediaShow },
+  { path: "/users/:id", name: "users-show", component: UsersShow },
 ];
 
 const router = new VueRouter({

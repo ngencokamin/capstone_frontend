@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div class="media-show">
     <h1>{{ media.title }}</h1>
 
     <img :src="media.poster" alt="Poster for selected media" />
@@ -13,7 +13,9 @@
     <div v-for="comment in media.comments" :key="comment.id" align="center">
       <div class="boxxed">
         <img :src="comment.user.profile_picture" alt="User profile picture" style="width: 10%;" />
-        <b>{{ comment.user.username }}</b>
+        <router-link :to="`/users/${comment.user.id}`">
+          <b>{{ comment.user.username }}</b>
+        </router-link>
         <hr />
         <h2>Suggested Media</h2>
         <h4>{{ comment.suggested_media.title }}</h4>
@@ -78,13 +80,6 @@ export default {
       this.media = response.data;
     });
   },
-  methods: {
-    // createVote: function() {
-    //   var params = {
-    //     value: this.voteValue,
-    //   };
-    //   axios.post("/api/votes", params);
-    // },
-  },
+  methods: {},
 };
 </script>
