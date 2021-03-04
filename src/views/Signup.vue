@@ -1,7 +1,9 @@
 <template>
   <div class="signup">
     <form v-on:submit.prevent="submit()">
-      <h1>Signup</h1>
+      <h2>
+        We would be honored if you would join us
+      </h2>
       <ul>
         <li class="text-danger" v-for="error in errors" v-bind:key="error">
           {{ error }}

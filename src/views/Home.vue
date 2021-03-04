@@ -1,6 +1,9 @@
 <template>
   <div class="home">
     <input type="text" v-model="filter" placeholder="Type to filter shows" list="titles" />
+    <button>
+      Add new show
+    </button>
     <datalist id="titles">
       <option v-for="media in media" :key="media.id">
         {{ media.title }}
