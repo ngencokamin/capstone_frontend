@@ -10,8 +10,8 @@
         </li>
       </ul>
       <div class="form-group">
-        <label>Name:</label>
-        <input type="text" class="form-control" v-model="name" />
+        <label>Username:</label>
+        <input type="text" class="form-control" v-model="username" />
       </div>
       <div class="form-group">
         <label>Email:</label>
@@ -36,7 +36,7 @@ import axios from "axios";
 export default {
   data: function() {
     return {
-      name: "",
+      username: "",
       email: "",
       password: "",
       passwordConfirmation: "",
@@ -44,9 +44,29 @@ export default {
     };
   },
   methods: {
+    login: function() {
+      var params = {
+        email: this.email,
+        password: this.password,
+      };
+      axios
+        .post("/api/sessions", params)
+        .then(response => {
+          axios.defaults.headers.common["Authorization"] = "Bearer " + response.data.jwt;
+          localStorage.setItem("jwt", response.data.jwt);
+          localStorage.setItem("user_id", response.data.user_id);
+          this.$router.push("/");
+        })
+        .catch(error => {
+          console.log(error.response);
+          this.errors = ["Invalid email or password."];
+          this.email = "";
+          this.password = "";
+        });
+    },
     submit: function() {
       var params = {
-        name: this.name,
+        username: this.username,
         email: this.email,
         password: this.password,
         password_confirmation: this.passwordConfirmation,
@@ -55,10 +75,12 @@ export default {
         .post("/api/users", params)
         .then(response => {
           console.log(response.data);
-          this.$router.push("/login");
+          // this.$router.push("/login");
+          this.login();
         })
         .catch(error => {
           this.errors = error.response.data.errors;
+          console.log(this.errors);
         });
     },
   },

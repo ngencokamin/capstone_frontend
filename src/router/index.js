@@ -7,6 +7,7 @@ import Logout from "../views/Logout.vue";
 import MediaShow from "../views/MediaShow.vue";
 import MediaCreate from "../views/MediaCreate.vue";
 import UsersShow from "../views/UsersShow.vue";
+import UsersEdit from "../views/UsersEdit.vue";
 
 
 Vue.use(VueRouter);
@@ -31,6 +32,7 @@ const routes = [
   { path: "/media/new", name: "media-create", component: MediaCreate },
   { path: "/media/:id", name: "media-show", component: MediaShow },
   { path: "/users/:id", name: "users-show", component: UsersShow },
+  { path: "/users/edit", name: "users-edit", component: UsersEdit },
 ];
 
 const router = new VueRouter({
