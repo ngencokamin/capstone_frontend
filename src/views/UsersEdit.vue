@@ -5,7 +5,7 @@
         {{ error }}
       </li>
     </ul>
-    <form v-on:submit.prevent="confirm = true" v-if="!confirm">
+    <form v-on:submit.prevent="updateUser()">
       <h1>Edit Profile</h1>
 
       <div class="form-group">
@@ -26,15 +26,9 @@
       </div>
       <input type="submit" class="btn btn-primary" value="Update" />
     </form>
-    <div v-else>
-      <h1>Please enter your password to confirm changes</h1>
-      <input type="text" v-model="oldEmail" placeholder="Original email" />
-      <br />
-      <input type="password" v-model="password" placeholder="Password" />
-      <button v-on:click="userAuth()">
-        Update
-      </button>
-    </div>
+    <button v-on:click="destroyUser()">
+      Delete Account
+    </button>
   </div>
 </template>
 
@@ -45,9 +39,6 @@ export default {
   data: function() {
     return {
       user: {},
-      oldEmail: "",
-      confirm: false,
-      password: "",
       errors: [],
     };
   },
@@ -64,25 +55,6 @@ export default {
       });
   },
   methods: {
-    userAuth: function() {
-      var params = {
-        email: this.oldEmail,
-        password: this.password,
-      };
-      axios
-        .post("/api/sessions", params)
-        .then(response => {
-          if (response.data.user_id == this.$parent.userID()) {
-            localStorage.setItem("jwt", response.data.jwt);
-            this.updateUser();
-          }
-        })
-        .catch(error => {
-          console.log(error.response);
-          this.errors = ["Invalid password, please try again"];
-          this.password = "";
-        });
-    },
     updateUser: function() {
       var params = {
         email: this.user.email,
@@ -99,6 +71,21 @@ export default {
         .catch(error => {
           this.errors = error.response.data.errors;
         });
+    },
+    destroyUser: function() {
+      if (confirm("Are you sure you want to delete your account?")) {
+        axios
+          .delete(`/api/users/me`)
+          .then(response => {
+            console.log(response.data.message);
+            alert(response.data.message);
+            this.$router.push("/");
+          })
+          .catch(error => {
+            this.errors = error.response.data.errors;
+            alert("Error! Couldn't delete user");
+          });
+      }
     },
   },
 };
