@@ -3,7 +3,7 @@
     <h1>{{ user.username }}</h1>
     <img :src="user.profile_picture" alt="User profile picture" style="width: 50%;" />
     <p>{{ user.bio }}</p>
-    <router-link :to="`/users/edit`"><button>Add new show</button></router-link>
+    <router-link :to="`/users/edit`" v-if="user.id == this.$parent.userID()"><button>Edit profile</button></router-link>
     <hr />
     <div v-for="comment in user.comments" :key="comment.id">
       <h2>Media</h2>

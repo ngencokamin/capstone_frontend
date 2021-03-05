@@ -31,8 +31,9 @@ const routes = [
   { path: "/logout", name: "logout", component: Logout },
   { path: "/media/new", name: "media-create", component: MediaCreate },
   { path: "/media/:id", name: "media-show", component: MediaShow },
-  { path: "/users/:id", name: "users-show", component: UsersShow },
   { path: "/users/edit", name: "users-edit", component: UsersEdit },
+  { path: "/users/:id", name: "users-show", component: UsersShow },
+  
 ];
 
 const router = new VueRouter({
