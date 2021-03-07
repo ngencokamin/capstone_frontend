@@ -10,7 +10,7 @@
     <small>Rated: {{ media.rated }} | IMDb Rating: {{ media.imdb_rating }}</small>
     <hr />
     <h2>Comments</h2>
-    <div v-for="comment in media.comments" :key="comment.id" align="center">
+    <div v-for="comment in orderBy(media.comments, 'votes', -1)" :key="comment.id" align="center">
       <div class="boxxed">
         <img :src="comment.user.profile_picture" alt="User profile picture" style="width: 10%;" />
         <router-link :to="`/users/${comment.user.id}`">
@@ -67,7 +67,9 @@
 
 <script>
 import axios from "axios";
+import Vue2Filters from "vue2-filters";
 export default {
+  mixins: [Vue2Filters.mixin],
   data: function() {
     return {
       media: {},

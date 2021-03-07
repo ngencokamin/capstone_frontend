@@ -11,6 +11,8 @@
         <router-link to="/login">Log In</router-link>
       </span>
       <span v-else>
+        <router-link :to="`/users/${userID()}`">Profile</router-link>
+        |
         <router-link to="/logout">Logout</router-link>
       </span>
     </div>
