@@ -1,5 +1,6 @@
 <template>
   <div class="media-show">
+    <!-- Information about selected  media -->
     <h1>{{ media.title }}</h1>
 
     <img :src="media.poster" alt="Poster for selected media" />
@@ -46,7 +47,7 @@
     <br />
 
     <div v-for="comment in orderBy(media.comments, 'votes', -1)" :key="comment.id" align="center">
-      <div class="boxxed">
+      <div class="boxxed" style="padding-bottom: 5px;">
         <img :src="comment.user.profile_picture" alt="User profile picture" style="width: 10%;" />
         <router-link :to="`/users/${comment.user.id}`">
           <b>{{ comment.user.username }}</b>
@@ -65,28 +66,52 @@
           Rated: {{ comment.suggested_media.rated }} | IMDb Rating: {{ comment.suggested_media.imdb_rating }}
         </small>
         <hr />
-        <h2>User Comment</h2>
-        <p>
-          {{ comment.text }}
-        </p>
-        <hr />
-        <h2>Verdict</h2>
-        <p>
-          <b>Similarity:</b>
-          {{ comment.similarity }}
-        </p>
-        <p>
-          <b>Enjoyability:</b>
-          {{ comment.enjoyability }}
-        </p>
-        <button>
-          👎
-        </button>
-        {{ comment.votes }}
-        <button>
-          👍
-        </button>
+        <span v-if="editCommentID != comment.id">
+          <h2>User Comment</h2>
+          <p>
+            {{ comment.text }}
+          </p>
+          <hr />
+          <h2>Verdict</h2>
+          <p>
+            <b>Similarity:</b>
+            {{ comment.similarity }}
+          </p>
+          <p>
+            <b>Enjoyability:</b>
+            {{ comment.enjoyability }}
+          </p>
+          <button>
+            👎
+          </button>
+          {{ comment.votes }}
+          <button>
+            👍
+          </button>
+          <hr v-if="$parent.userID() == comment.user_id" />
+          <button v-if="$parent.userID() == comment.user_id" v-on:click="editCommentID = comment.id">
+            Edit Comment
+          </button>
+        </span>
+        <span v-if="comment.id == editCommentID">
+          <h2>Edit Comment</h2>
+          <h2>User Comment</h2>
+          <textarea name="comment" cols="30" rows="10" v-model="comment.text"></textarea>
+          <hr />
+          <h2>Verdict</h2>
+          <p>
+            <b>Similarity:</b>
+            <input type="number" v-model="comment.similarity" />
+          </p>
+          <p>
+            <b>Enjoyability:</b>
+            <input type="number" v-model="comment.enjoyability" />
+          </p>
+          <button v-on:click="editCommentID = 0">Cancel Changes</button>
+          <button v-on:click="updateComment(comment)">Update Comment</button>
+        </span>
       </div>
+
       <br />
     </div>
   </div>
@@ -116,6 +141,7 @@ export default {
       similarity: 0,
       commentText: "",
       errors: [],
+      editCommentID: 0,
       // voteValue: 0,
     };
   },
@@ -164,6 +190,17 @@ export default {
       } else {
         this.errors = ["ERROR! Suggested show cannot be the same as the original show."];
       }
+    },
+    updateComment: function(comment) {
+      var params = {
+        text: comment.text,
+        similarity: comment.similarity,
+        enjoyability: comment.enjoyability,
+      };
+      axios.patch(`/api/comments/${comment.id}`, params).then(response => {
+        console.log(response.data);
+        this.editCommentID = 0;
+      });
     },
   },
 };
