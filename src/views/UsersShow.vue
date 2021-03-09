@@ -8,7 +8,9 @@
     <div v-for="comment in user.comments" :key="comment.id">
       <h2>Media</h2>
       <h4>{{ comment.media.title }}</h4>
-      <img :src="comment.media.poster" alt="Poster for selected media" />
+      <router-link :to="`/media/${comment.media.id}`">
+        <img :src="comment.media.poster" alt="Poster for selected media" />
+      </router-link>
       <p>
         <b>Released: {{ comment.media.released }}</b>
       </p>
@@ -35,7 +37,9 @@
       </p>
       <h2>Suggested Media</h2>
       <h4>{{ comment.suggested_media.title }}</h4>
-      <img :src="comment.suggested_media.poster" alt="Poster for selected media" />
+      <router-link :to="`/media/${comment.suggested_media.id}`">
+        <img :src="comment.suggested_media.poster" alt="Poster for selected media" />
+      </router-link>
       <p>
         <b>Released: {{ comment.suggested_media.released }}</b>
       </p>

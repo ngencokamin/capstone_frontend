@@ -2,7 +2,6 @@
   <div class="media-show">
     <!-- Information about selected  media -->
     <h1>{{ media.title }}</h1>
-
     <img :src="media.poster" alt="Poster for selected media" />
     <h3>Released: {{ media.released }}</h3>
     <p>
@@ -56,7 +55,9 @@
         <hr />
         <h2>Suggested Media</h2>
         <h4>{{ comment.suggested_media.title }}</h4>
-        <img :src="comment.suggested_media.poster" alt="Poster for selected media" />
+        <a :href="`/media/${comment.suggested_media.id}`">
+          <img :src="comment.suggested_media.poster" alt="Poster for selected media" />
+        </a>
         <p>
           <b>Released: {{ comment.suggested_media.released }}</b>
         </p>
