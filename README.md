@@ -13,11 +13,11 @@
 - Users can go to the page of a show to view comments, displayed from most to least votes
 - Users can look at the profile and comment histories of other users
 - Users can comment on media with links to recommendations, rated on enjoyability and similarity with a short comment
+- Users can edit or delete their own comments
 
 ## Todo
 
 - Users can vote up or down on comments depending on if they agree with the comment
-- Users can edit or delete their own comments
 - Add theme to site
 - Add screenshots to README
 
