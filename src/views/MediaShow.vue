@@ -46,6 +46,7 @@
     <br />
     <br />
 
+    <!-- Comments section -->
     <div v-for="comment in orderBy(media.comments, 'votes', -1)" :key="comment.id" align="center">
       <div class="boxxed" style="padding-bottom: 5px;">
         <img :src="comment.user.profile_picture" alt="User profile picture" style="width: 10%;" />
@@ -66,6 +67,7 @@
           Rated: {{ comment.suggested_media.rated }} | IMDb Rating: {{ comment.suggested_media.imdb_rating }}
         </small>
         <hr />
+        <!-- Information is shown unless edit button is clicked -->
         <span v-if="editCommentID != comment.id">
           <h2>User Comment</h2>
           <p>
@@ -93,6 +95,7 @@
             Edit Comment
           </button>
         </span>
+        <!-- Shows input fields instead if edit button is clicked -->
         <span v-if="comment.id == editCommentID">
           <h2>Edit Comment</h2>
           <h2>User Comment</h2>
@@ -109,6 +112,8 @@
           </p>
           <button v-on:click="editCommentID = 0">Cancel Changes</button>
           <button v-on:click="updateComment(comment)">Update Comment</button>
+          <br />
+          <button v-on:click="destroyComment(comment)">Delete Comment</button>
         </span>
       </div>
 
@@ -201,6 +206,21 @@ export default {
         console.log(response.data);
         this.editCommentID = 0;
       });
+    },
+    destroyComment: function(comment) {
+      if (confirm("Are you sure you want to delete this comment?")) {
+        axios
+          .delete(`/api/comments/${comment.id}`)
+          .then(response => {
+            console.log(response.data.message);
+            alert(response.data.message);
+            this.comments.splice(this.comments.indexOf(comment), 1);
+          })
+          .catch(error => {
+            this.errors = error.response.data.errors;
+            alert("Error! Couldn't delete user");
+          });
+      }
     },
   },
 };
