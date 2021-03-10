@@ -87,10 +87,11 @@
           <button>
             👎
           </button>
-          {{ comment.votes }}
+          {{ comment.vote_total }}
           <button>
             👍
           </button>
+          <p>{{ comment.voted }}</p>
           <hr v-if="$parent.userID() == comment.user_id" />
           <button v-if="$parent.userID() == comment.user_id" v-on:click="editCommentID = comment.id">
             Edit Comment
@@ -148,7 +149,6 @@ export default {
       commentText: "",
       errors: [],
       editCommentID: 0,
-      // voteValue: 0,
     };
   },
   created: function() {
@@ -156,6 +156,11 @@ export default {
       console.log(response.data);
       this.media = response.data;
       this.comments = response.data.comments;
+      for (var i = 0; i < this.comments.length; i++) {
+        if (this.comments[i].votes.some(vote => vote.user_id == this.$parent.userID())) {
+          this.comments[i].voted = this.comments[i].votes.find(vote => vote["user_id"] == this.$parent.userID()).value;
+        }
+      }
     });
   },
   methods: {
