@@ -10,7 +10,8 @@
 
       <div class="form-group">
         <label>Profile picture:</label>
-        <input type="text" class="form-control" v-model="user.profile_picture" />
+        <!-- <input type="text" class="form-control" v-model="user.profile_picture" /> -->
+        <input type="file" v-on:change="setFile($event)" ref="fileInput" />
       </div>
       <div class="form-group">
         <label>Username:</label>
@@ -55,15 +56,23 @@ export default {
       });
   },
   methods: {
+    setFile: function(event) {
+      if (event.target.files.length > 0) {
+        this.image = event.target.files[0];
+      }
+    },
     updateUser: function() {
-      var params = {
-        email: this.user.email,
-        profile_picture: this.user.profile_picture,
-        username: this.user.username,
-        bio: this.user.bio,
-      };
+      var formData = new FormData();
+      formData.append("email", this.user.email);
+      formData.append("username", this.user.username);
+      formData.append("bio", this.user.bio);
+      if (this.image) {
+        formData.append("profile_picture", this.image);
+      } else {
+        formData.append("profile_picture", this.user.profile_picture);
+      }
       axios
-        .patch(`/api/users/me`, params)
+        .patch(`/api/users/me`, formData)
         .then(response => {
           console.log(response.data);
           this.$router.push(`/users/${this.user.id}`);
@@ -79,6 +88,8 @@ export default {
           .then(response => {
             console.log(response.data.message);
             alert(response.data.message);
+            localStorage.removeItem("jwt");
+            localStorage.removeItem("user_id");
             this.$router.push("/");
           })
           .catch(error => {
