@@ -14,10 +14,10 @@
 - Users can look at the profile and comment histories of other users
 - Users can comment on media with links to recommendations, rated on enjoyability and similarity with a short comment
 - Users can edit or delete their own comments
+- Users can vote up or down on comments depending on if they agree with the comment
 
 ## Todo
 
-- Users can vote up or down on comments depending on if they agree with the comment
 - Add theme to site
 - Add screenshots to README
 

@@ -84,11 +84,11 @@
             <b>Enjoyability:</b>
             {{ comment.enjoyability }}
           </p>
-          <button>
+          <button v-on:click="addVote(comment, -1)">
             👎
           </button>
           {{ comment.vote_total }}
-          <button>
+          <button v-on:click="addVote(comment, 1)">
             👍
           </button>
           <p>{{ comment.voted }}</p>
@@ -225,6 +225,38 @@ export default {
           .catch(error => {
             this.errors = error.response.data.errors;
             alert("Error! Couldn't delete user");
+          });
+      }
+    },
+    addVote: function(comment, value) {
+      if (!comment.voted) {
+        var params = {
+          comment_id: comment.id,
+          value: value,
+        };
+        axios
+          .post("/api/votes", params)
+          .then(response => {
+            console.log(response.data);
+            comment.vote_total += value;
+            comment.voted = value;
+            comment.votes.push(response.data);
+            console.log(comment.votes);
+          })
+          .catch(error => {
+            this.errors = [error.response];
+            console.log(this.errors);
+          });
+      } else if (comment.voted != value) {
+        params = {
+          value: value,
+        };
+        axios
+          .patch(`/api/votes/${comment.votes.find(vote => vote["user_id"] == this.$parent.userID()).id}`, params)
+          .then(response => {
+            console.log(response.data);
+            comment.vote_total += value + value;
+            comment.voted = value;
           });
       }
     },
