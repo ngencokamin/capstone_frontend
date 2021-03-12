@@ -23,10 +23,8 @@
     </div>
 
     <hr />
+    <h1>Comments</h1>
     <div v-for="comment in user.comments" :key="comment.id">
-      <h1>Comments</h1>
-      <br />
-      <br />
       <h2>Media</h2>
       <h4>{{ comment.media.title }}</h4>
       <router-link :to="`/media/${comment.media.id}`">
@@ -51,10 +49,6 @@
       <p>
         <b>Enjoyability:</b>
         {{ comment.enjoyability }}
-      </p>
-      <p>
-        <b>Comment Rating:</b>
-        {{ comment.votes }}
       </p>
       <h2>Suggested Media</h2>
       <h4>{{ comment.suggested_media.title }}</h4>
