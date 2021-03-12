@@ -15,6 +15,7 @@
 - Users can comment on media with links to recommendations, rated on enjoyability and similarity with a short comment
 - Users can edit or delete their own comments
 - Users can vote up or down on comments depending on if they agree with the comment
+- Users can pick a favorite show to display in their profile
 
 ## Todo
 
