@@ -25,8 +25,26 @@
         <label>Bio:</label>
         <input type="text" class="form-control" v-model="user.bio" />
       </div>
+      <div class="form-group" v-if="showFavorite">
+        <label>Favorite Show:</label>
+        <input type="text" v-model="favoriteMedia" placeholder="Type to search for shows" list="titles" />
+
+        <router-link :to="{ path: '/media/new', query: { search: favoriteMedia } }">
+          <button>Add new show</button>
+        </router-link>
+        <br />
+
+        <datalist id="titles">
+          <option v-for="media in allMedia" :key="media.id">
+            {{ media.title }}
+          </option>
+        </datalist>
+      </div>
+      <button v-on:click="addFavorite()" v-if="!showFavorite" type="button">Add/Update Favorite Show</button>
+
       <input type="submit" class="btn btn-primary" value="Update" />
     </form>
+
     <button v-on:click="destroyUser()">
       Delete Account
     </button>
@@ -41,6 +59,9 @@ export default {
     return {
       user: {},
       errors: [],
+      showFavorite: false,
+      allMedia: [],
+      favoriteMedia: "",
     };
   },
   created: function() {
@@ -56,6 +77,16 @@ export default {
       });
   },
   methods: {
+    findMedia: function(media) {
+      return media.title === this.favoriteMedia;
+    },
+    addFavorite() {
+      axios.get("/api/media").then(response => {
+        this.allMedia = response.data;
+        console.log(response.data);
+        this.showFavorite = true;
+      });
+    },
     setFile: function(event) {
       if (event.target.files.length > 0) {
         this.image = event.target.files[0];
@@ -70,6 +101,14 @@ export default {
         formData.append("profile_picture", this.image);
       } else {
         formData.append("profile_picture", this.user.profile_picture);
+      }
+      if (this.allMedia.find(this.findMedia)) {
+        formData.append("favorite_media_id", this.allMedia.find(this.findMedia).id);
+      } else if (!this.allMedia.find(this.findMedia)) {
+        this.errors = [
+          "ERROR! Show not found. Please click the 'Add New Show' button to add it, or choose a different show.",
+        ];
+        return;
       }
       axios
         .patch(`/api/users/me`, formData)

@@ -1,11 +1,32 @@
 <template>
   <div class="users-show">
     <h1>{{ user.username }}</h1>
-    <img :src="$parent.profilePhoto(user)" alt="User profile picture" style="width: 50%;" />
+    <img :src="$parent.profilePhoto(user)" alt="User profile picture" style="width: 25%;" />
     <p>{{ user.bio }}</p>
-    <router-link :to="`/users/edit`" v-if="user.id == this.$parent.userID()"><button>Edit profile</button></router-link>
+    <router-link :to="`/users/edit`" v-if="user.id == this.$parent.userID()">
+      <button>Edit profile</button>
+    </router-link>
+    <div v-if="user.favorite_media">
+      <hr />
+      <h2>Favorite Show</h2>
+      <h4>{{ user.favorite_media.title }}</h4>
+      <router-link :to="`/media/${user.favorite_media.id}`">
+        <img :src="user.favorite_media.poster" alt="Poster for selected media" />
+      </router-link>
+      <p>
+        <b>Released: {{ user.favorite_media.released }}</b>
+      </p>
+      <p>
+        {{ user.favorite_media.plot }}
+      </p>
+      <small>Rated: {{ user.favorite_media.rated }} | IMDb Rating: {{ user.favorite_media.imdb_rating }}</small>
+    </div>
+
     <hr />
     <div v-for="comment in user.comments" :key="comment.id">
+      <h1>Comments</h1>
+      <br />
+      <br />
       <h2>Media</h2>
       <h4>{{ comment.media.title }}</h4>
       <router-link :to="`/media/${comment.media.id}`">

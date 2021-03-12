@@ -48,7 +48,6 @@
     <!-- Comments section -->
     <div v-for="comment in orderBy(media.comments, 'votes', -1)" :key="comment.id" align="center">
       <div class="boxxed" style="padding-bottom: 5px;">
-        <!-- <img :src="comment.user.profile_picture" alt="User profile picture" style="width: 10%;" /> -->
         <img :src="$parent.profilePhoto(comment.user)" alt="User profile picture" style="width: 10%;" />
         <router-link :to="`/users/${comment.user.id}`">
           <b>{{ comment.user.username }}</b>
