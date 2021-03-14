@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div class="media-new">
     <input type="text" placeholder="Type to search for a new show" v-model="search" />
     <button v-on:click="updateSearch">Search</button>
     <div v-for="suggestion in media" :key="suggestion.omdb_id">

@@ -3,7 +3,7 @@
     <h1>{{ user.username }}</h1>
     <img :src="$parent.profilePhoto(user)" alt="User profile picture" style="width: 25%;" />
     <p>{{ user.bio }}</p>
-    <router-link :to="`/users/edit`" v-if="user.id == this.$parent.userID()">
+    <router-link :to="`/users/me/edit`" v-if="user.id == this.$parent.userID()">
       <button>Edit profile</button>
     </router-link>
     <div v-if="user.favorite_media">
