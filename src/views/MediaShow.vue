@@ -84,14 +84,13 @@
             <b>Enjoyability:</b>
             {{ comment.enjoyability }}
           </p>
-          <button v-on:click="addVote(comment, -1)">
+          <button v-on:click="addVote(comment, -1)" :disabled="comment.voted == -1">
             👎
           </button>
           {{ comment.vote_total }}
-          <button v-on:click="addVote(comment, 1)">
+          <button v-on:click="addVote(comment, 1)" :disabled="comment.voted == 1">
             👍
           </button>
-          <p>{{ comment.voted }}</p>
           <hr v-if="$parent.userID() == comment.user_id" />
           <button v-if="$parent.userID() == comment.user_id" v-on:click="editCommentID = comment.id">
             Edit Comment
