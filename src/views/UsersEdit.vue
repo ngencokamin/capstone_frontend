@@ -10,7 +10,6 @@
 
       <div class="form-group">
         <label>Profile picture:</label>
-        <!-- <input type="text" class="form-control" v-model="user.profile_picture" /> -->
         <input type="file" v-on:change="setFile($event)" ref="fileInput" />
       </div>
       <div class="form-group">
@@ -33,6 +32,7 @@
           <button>Add new show</button>
         </router-link>
         <br />
+        <button v-on:click="showFavorite = false">Cancel</button>
 
         <datalist id="titles">
           <option v-for="media in allMedia" :key="media.id">
@@ -96,19 +96,23 @@ export default {
       var formData = new FormData();
       formData.append("email", this.user.email);
       formData.append("username", this.user.username);
-      formData.append("bio", this.user.bio);
+      if (this.user.bio) {
+        formData.append("bio", this.user.bio);
+      } else {
+        formData.append("bio", "");
+      }
       if (this.image) {
         formData.append("profile_picture", this.image);
-      } else {
-        formData.append("profile_picture", this.user.profile_picture);
       }
-      if (this.allMedia.find(this.findMedia)) {
-        formData.append("favorite_media_id", this.allMedia.find(this.findMedia).id);
-      } else if (!this.allMedia.find(this.findMedia)) {
-        this.errors = [
-          "ERROR! Show not found. Please click the 'Add New Show' button to add it, or choose a different show.",
-        ];
-        return;
+      if (this.showFavorite) {
+        if (this.allMedia.find(this.findMedia)) {
+          formData.append("favorite_media_id", this.allMedia.find(this.findMedia).id);
+        } else if (!this.allMedia.find(this.findMedia)) {
+          this.errors = [
+            "ERROR! Show not found. Please click the 'Add New Show' button to add it, or choose a different show.",
+          ];
+          return;
+        }
       }
       axios
         .patch(`/api/users/me`, formData)
