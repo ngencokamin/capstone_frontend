@@ -13,6 +13,7 @@
       <p>
         <b>Rated {{ media.rated }} | Released: {{ media.released }}</b>
       </p>
+      <p>{{ media.comment_count }} comments</p>
       <router-link :to="`/media/${media.id}`"><button>More Info</button></router-link>
     </div>
   </div>

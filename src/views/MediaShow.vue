@@ -10,7 +10,7 @@
     <small>Rated: {{ media.rated }} | IMDb Rating: {{ media.imdb_rating }}</small>
     <hr />
     <h2>Comments</h2>
-    <button v-on:click="newComment()" v-if="!commentShow">New Comment</button>
+    <button v-on:click="newComment()" v-if="!commentShow && $parent.loggedIn()">New Comment</button>
 
     <div align="center" v-if="commentShow">
       <ul>

@@ -125,7 +125,7 @@ export default {
         });
     },
     destroyUser: function() {
-      if (confirm("Are you sure you want to delete your account?")) {
+      if (confirm("Are you sure you want to delete your account? This will also remove any comments you have made.")) {
         axios
           .delete(`/api/users/me`)
           .then(response => {
