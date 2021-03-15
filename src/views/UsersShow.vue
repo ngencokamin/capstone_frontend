@@ -1,5 +1,5 @@
 <template>
-  <div class="users-show">
+  <div class="users-show" v-if="user">
     <h1>{{ user.username }}</h1>
     <img
       :src="user.profile_picture ? user.profile_picture : require('../assets/default.jpeg')"
@@ -25,9 +25,9 @@
       </p>
       <small>Rated: {{ user.favorite_media.rated }} | IMDb Rating: {{ user.favorite_media.imdb_rating }}</small>
     </div>
-
     <hr />
-    <h1>Comments</h1>
+    <h1 v-if="user.comments.length > 0">Comments</h1>
+    <h1 v-else>No comments found</h1>
     <div v-for="comment in orderBy(user.comments, 'updated_at', -1)" :key="comment.id">
       <h2>Media</h2>
       <h4>{{ comment.media.title }}</h4>
@@ -90,7 +90,7 @@ export default {
   mixins: [Vue2Filters.mixin],
   data: function() {
     return {
-      user: {},
+      user: "",
     };
   },
   created: function() {

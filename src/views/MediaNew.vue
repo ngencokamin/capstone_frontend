@@ -2,11 +2,14 @@
   <div class="media-new">
     <input type="text" placeholder="Type to search for a new show" v-model="search" />
     <button v-on:click="updateSearch">Search</button>
-    <div v-for="suggestion in media" :key="suggestion.omdb_id">
-      <h3>{{ suggestion.title }}</h3>
-      <img :src="suggestion.poster" alt="" />
-      <p>{{ suggestion.year }}</p>
-      <button v-on:click="addMedia(suggestion.omdb_id)">Add show</button>
+    <div v-for="result in media" :key="result.omdb_id">
+      <h3>{{ result.title }}</h3>
+      <img
+        :src="result.poster ? result.poster : require('../assets/censorposter.png')"
+        alt="Posted for media search result"
+      />
+      <p>{{ result.year }}</p>
+      <button v-on:click="addMedia(result.omdb_id)">Add show</button>
       <br />
     </div>
   </div>

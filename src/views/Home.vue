@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div class="home" v-if="media">
     <input type="text" v-model="filter" placeholder="Type to filter shows" list="titles" />
     <router-link :to="{ path: '/media/new', query: { search: filter } }"><button>Add new show</button></router-link>
     <datalist id="titles">
@@ -28,7 +28,7 @@ export default {
   mixins: [Vue2Filters.mixin],
   data: function() {
     return {
-      media: [],
+      media: "",
       filter: "",
     };
   },

@@ -1,5 +1,5 @@
 <template>
-  <div class="media-show">
+  <div class="media-show" v-if="media">
     <!-- Information about selected  media -->
     <h1>{{ media.title }}</h1>
     <img :src="media.poster ? media.poster : require('../assets/censorposter.png')" alt="Poster for selected media" />
@@ -157,7 +157,7 @@ export default {
   mixins: [Vue2Filters.mixin],
   data: function() {
     return {
-      media: {},
+      media: "",
       comments: [],
       allMedia: [],
       commentShow: false,

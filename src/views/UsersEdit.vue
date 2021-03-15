@@ -1,5 +1,5 @@
 <template>
-  <div class="users-edit">
+  <div class="users-edit" v-if="user">
     <ul>
       <li class="text-danger" v-for="error in errors" v-bind:key="error">
         {{ error }}
@@ -63,7 +63,7 @@ import axios from "axios";
 export default {
   data: function() {
     return {
-      user: {},
+      user: "",
       errors: [],
       showFavorite: false,
       allMedia: [],
