@@ -1,7 +1,11 @@
 <template>
   <div class="users-show">
     <h1>{{ user.username }}</h1>
-    <img :src="$parent.profilePhoto(user)" alt="User profile picture" style="width: 25%;" />
+    <img
+      :src="user.profile_picture ? user.profile_picture : require('../assets/default.jpeg')"
+      alt="User profile picture"
+      style="width: 25%;"
+    />
     <p>{{ user.bio }}</p>
     <router-link :to="`/users/me/edit`" v-if="user.id == this.$parent.userID()">
       <button>Edit profile</button>
@@ -24,11 +28,14 @@
 
     <hr />
     <h1>Comments</h1>
-    <div v-for="comment in user.comments" :key="comment.id">
+    <div v-for="comment in orderBy(user.comments, 'updated_at', -1)" :key="comment.id">
       <h2>Media</h2>
       <h4>{{ comment.media.title }}</h4>
       <router-link :to="`/media/${comment.media.id}`">
-        <img :src="comment.media.poster" alt="Poster for selected media" />
+        <img
+          :src="comment.media.poster ? comment.media.poster : require('../assets/censorposter.png')"
+          alt="Poster for selected media"
+        />
       </router-link>
       <p>
         <b>Released: {{ comment.media.released }}</b>
@@ -53,7 +60,10 @@
       <h2>Suggested Media</h2>
       <h4>{{ comment.suggested_media.title }}</h4>
       <router-link :to="`/media/${comment.suggested_media.id}`">
-        <img :src="comment.suggested_media.poster" alt="Poster for selected media" />
+        <img
+          :src="comment.suggested_media.poster ? comment.suggested_media.poster : require('../assets/censorposter.png')"
+          alt="Poster for selected media"
+        />
       </router-link>
       <p>
         <b>Released: {{ comment.suggested_media.released }}</b>
@@ -62,6 +72,9 @@
         {{ comment.suggested_media.plot }}
       </p>
       <small>Rated: {{ comment.suggested_media.rated }} | IMDb Rating: {{ comment.suggested_media.imdb_rating }}</small>
+      <br />
+      <small>Comment created {{ formatDate(comment.created_at) }}&nbsp;</small>
+      <small v-if="comment.created_at != comment.updated_at">(edited {{ formatDate(comment.updated_at) }})</small>
       <hr />
     </div>
   </div>
@@ -71,7 +84,10 @@
 
 <script>
 import axios from "axios";
+import moment from "moment";
+import Vue2Filters from "vue2-filters";
 export default {
+  mixins: [Vue2Filters.mixin],
   data: function() {
     return {
       user: {},
@@ -83,6 +99,10 @@ export default {
       this.user = response.data;
     });
   },
-  methods: {},
+  methods: {
+    formatDate(date) {
+      return moment(date).fromNow();
+    },
+  },
 };
 </script>

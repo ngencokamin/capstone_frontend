@@ -40,6 +40,12 @@
           </option>
         </datalist>
       </div>
+      <div class="form-group">
+        <label>Profanity filter:</label>
+        <input type="checkbox" name="Profanity filter" v-model="user.profanity_filter" />
+        <label v-if="!user.profanity_filter">Off</label>
+        <label v-if="user.profanity_filter">On</label>
+      </div>
       <button v-on:click="addFavorite()" v-if="!showFavorite" type="button">Add/Update Favorite Show</button>
 
       <input type="submit" class="btn btn-primary" value="Update" />
@@ -104,6 +110,7 @@ export default {
       if (this.image) {
         formData.append("profile_picture", this.image);
       }
+      formData.append("profanity_filter", this.user.profanity_filter);
       if (this.showFavorite) {
         if (this.allMedia.find(this.findMedia)) {
           formData.append("favorite_media_id", this.allMedia.find(this.findMedia).id);

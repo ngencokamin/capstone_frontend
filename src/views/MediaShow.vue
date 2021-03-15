@@ -2,7 +2,7 @@
   <div class="media-show">
     <!-- Information about selected  media -->
     <h1>{{ media.title }}</h1>
-    <img :src="media.poster" alt="Poster for selected media" />
+    <img :src="media.poster ? media.poster : require('../assets/censorposter.png')" alt="Poster for selected media" />
     <h3>Released: {{ media.released }}</h3>
     <p>
       <b>{{ media.plot }}</b>
@@ -12,7 +12,41 @@
     <h2>Comments</h2>
     <button v-on:click="newComment()" v-if="!commentShow && $parent.loggedIn()">New Comment</button>
 
-    <div align="center" v-if="commentShow">
+    <form v-on:submit.prevent="addComment" v-if="commentShow">
+      <ul>
+        <li class="text-danger" v-for="error in errors" v-bind:key="error.id">
+          {{ error }}
+        </li>
+      </ul>
+      <h2>Add Comment</h2>
+      <input type="text" v-model="suggestedMedia" placeholder="Type to search for shows" list="titles" />
+
+      <router-link :to="{ path: '/media/new', query: { search: suggestedMedia } }">
+        <button type="button">Add new show</button>
+      </router-link>
+      <h2>Verdict</h2>
+      <div class="form-group">
+        <label for="similarity">Similarity:</label>
+        <input type="number" id="similarity" v-model="similarity" min="1" max="10" />
+      </div>
+      <div class="form-group">
+        <label for="enjoyability">Enjoyability:</label>
+        <input type="number" id="enjoyability" v-model="enjoyability" min="1" max="10" />
+      </div>
+      <div class="form-group">
+        <label for="commentText">Additional comments:</label>
+        <textarea name="commentText" id="commentText" v-model="commentText" cols="30" rows="10"></textarea>
+      </div>
+      <button v-on:click="commentShow = false" type="button">Cancel</button>
+      <input type="submit" class="btn btn-primary" value="Add" />
+      <datalist id="titles">
+        <option v-for="media in allMedia" :key="media.id">
+          {{ media.title }}
+        </option>
+      </datalist>
+    </form>
+
+    <!-- <div align="center" v-if="commentShow">
       <ul>
         <li class="text-danger" v-for="error in errors" v-bind:key="error.id">
           {{ error }}
@@ -35,12 +69,8 @@
       <br />
       <button v-on:click="addComment()">Add Comment</button>
 
-      <datalist id="titles">
-        <option v-for="media in allMedia" :key="media.id">
-          {{ media.title }}
-        </option>
-      </datalist>
-    </div>
+      
+    </div> -->
 
     <br />
     <br />
@@ -48,7 +78,11 @@
     <!-- Comments section -->
     <div v-for="comment in orderBy(media.comments, 'votes', -1)" :key="comment.id" align="center">
       <div class="boxxed" style="padding-bottom: 5px;">
-        <img :src="$parent.profilePhoto(comment.user)" alt="User profile picture" style="width: 10%;" />
+        <img
+          :src="comment.user.profile_picture ? comment.user.profile_picture : require('../assets/default.jpeg')"
+          alt="User profile picture"
+          style="width: 10%;"
+        />
         <router-link :to="`/users/${comment.user.id}`">
           <b>{{ comment.user.username }}</b>
         </router-link>
@@ -56,7 +90,12 @@
         <h2>Suggested Media</h2>
         <h4>{{ comment.suggested_media.title }}</h4>
         <a :href="`/media/${comment.suggested_media.id}`">
-          <img :src="comment.suggested_media.poster" alt="Poster for selected media" />
+          <img
+            :src="
+              comment.suggested_media.poster ? comment.suggested_media.poster : require('../assets/censorposter.png')
+            "
+            alt="Poster for selected media"
+          />
         </a>
         <p>
           <b>Released: {{ comment.suggested_media.released }}</b>
@@ -91,13 +130,37 @@
           <button v-on:click="addVote(comment, 1)" :disabled="comment.voted == 1">
             👍
           </button>
+          <br />
+          <small>Created {{ formatDate(comment.created_at) }}&nbsp;</small>
+          <small v-if="comment.created_at != comment.updated_at">(edited {{ formatDate(comment.updated_at) }})</small>
           <hr v-if="$parent.userID() == comment.user_id" />
           <button v-if="$parent.userID() == comment.user_id" v-on:click="editCommentID = comment.id">
             Edit Comment
           </button>
         </span>
         <!-- Shows input fields instead if edit button is clicked -->
-        <span v-if="comment.id == editCommentID">
+        <form v-on:submit.prevent="updateComment(comment)" v-if="comment.id == editCommentID">
+          <h2>Edit Comment</h2>
+
+          <div class="form-group">
+            <label>User comment:</label>
+            <textarea name="comment" cols="30" rows="10" v-model="comment.text"></textarea>
+          </div>
+          <h2>Verdict</h2>
+          <div class="form-group">
+            <label>Similarity:</label>
+            <input type="number" v-model="comment.similarity" min="1" max="10" />
+          </div>
+          <div class="form-group">
+            <label>Enjoyability:</label>
+            <input type="number" v-model="comment.enjoyability" min="1" max="10" />
+          </div>
+          <button v-on:click="editCommentID = 0" type="button">Cancel Changes</button>
+          <input type="submit" class="btn btn-primary" value="Update" />
+          <br />
+          <button v-on:click="destroyComment(comment)" type="button">Delete Comment</button>
+        </form>
+        <!-- <span v-if="comment.id == editCommentID">
           <h2>Edit Comment</h2>
           <h2>User Comment</h2>
           <textarea name="comment" cols="30" rows="10" v-model="comment.text"></textarea>
@@ -115,7 +178,7 @@
           <button v-on:click="updateComment(comment)">Update Comment</button>
           <br />
           <button v-on:click="destroyComment(comment)">Delete Comment</button>
-        </span>
+        </span> -->
       </div>
 
       <br />
@@ -134,6 +197,7 @@
 <script>
 import axios from "axios";
 import Vue2Filters from "vue2-filters";
+import moment from "moment";
 export default {
   mixins: [Vue2Filters.mixin],
   data: function() {
@@ -143,8 +207,8 @@ export default {
       allMedia: [],
       commentShow: false,
       suggestedMedia: "",
-      enjoyability: 0,
-      similarity: 0,
+      enjoyability: 1,
+      similarity: 1,
       commentText: "",
       errors: [],
       editCommentID: 0,
@@ -163,6 +227,9 @@ export default {
     });
   },
   methods: {
+    formatDate(date) {
+      return moment(date).fromNow();
+    },
     findMedia: function(media) {
       return media.title === this.suggestedMedia;
     },
@@ -209,6 +276,7 @@ export default {
       };
       axios.patch(`/api/comments/${comment.id}`, params).then(response => {
         console.log(response.data);
+        // comment.edited = true;
         this.editCommentID = 0;
       });
     },

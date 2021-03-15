@@ -9,7 +9,7 @@
     </datalist>
     <div v-for="media in filterBy(media, filter)" :key="media.id">
       <h2>{{ media.title }}</h2>
-      <img :src="media.poster" alt="Poster for listed media" />
+      <img :src="media.poster ? media.poster : require('../assets/censorposter.png')" alt="Poster for listed media" />
       <p>
         <b>Rated {{ media.rated }} | Released: {{ media.released }}</b>
       </p>

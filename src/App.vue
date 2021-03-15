@@ -50,14 +50,6 @@ export default {
     userID: function() {
       return localStorage.getItem("user_id");
     },
-    profilePhoto: function(user) {
-      console.log(user);
-      if (user.profile_picture) {
-        return user.profile_picture;
-      } else {
-        return require("./assets/default.jpeg");
-      }
-    },
   },
 };
 </script>

@@ -25,6 +25,12 @@
         <label>Password confirmation:</label>
         <input type="password" class="form-control" v-model="passwordConfirmation" />
       </div>
+      <div class="form-group">
+        <label>Would you like to enable profanity filter?</label>
+        <input type="checkbox" name="Profanity filter" v-model="profanityFilter" />
+        <label v-if="!profanityFilter">Off</label>
+        <label v-if="profanityFilter">On</label>
+      </div>
       <input type="submit" class="btn btn-primary" value="Submit" />
     </form>
   </div>
@@ -40,6 +46,7 @@ export default {
       email: "",
       password: "",
       passwordConfirmation: "",
+      profanityFilter: false,
       errors: [],
     };
   },
@@ -70,6 +77,7 @@ export default {
         email: this.email,
         password: this.password,
         password_confirmation: this.passwordConfirmation,
+        profanity_filter: this.profanityFilter,
       };
       axios
         .post("/api/users", params)
