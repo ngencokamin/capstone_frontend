@@ -4,10 +4,7 @@
     <button v-on:click="updateSearch">Search</button>
     <div v-for="result in media" :key="result.omdb_id">
       <h3>{{ result.title }}</h3>
-      <img
-        :src="result.poster ? result.poster : require('../assets/censorposter.png')"
-        alt="Posted for media search result"
-      />
+      <img :src="result.poster" alt="Posted for media search result" />
       <p>{{ result.year }}</p>
       <button v-on:click="addMedia(result.omdb_id)">Add show</button>
       <br />

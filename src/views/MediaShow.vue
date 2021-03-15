@@ -2,7 +2,7 @@
   <div class="media-show" v-if="media">
     <!-- Information about selected  media -->
     <h1>{{ media.title }}</h1>
-    <img :src="media.poster ? media.poster : require('../assets/censorposter.png')" alt="Poster for selected media" />
+    <img :src="media.poster" alt="Poster for selected media" />
     <h3>Released: {{ media.released }}</h3>
     <p>
       <b>{{ media.plot }}</b>
@@ -64,12 +64,7 @@
         <h2>Suggested Media</h2>
         <h4>{{ comment.suggested_media.title }}</h4>
         <a :href="`/media/${comment.suggested_media.id}`">
-          <img
-            :src="
-              comment.suggested_media.poster ? comment.suggested_media.poster : require('../assets/censorposter.png')
-            "
-            alt="Poster for selected media"
-          />
+          <img :src="comment.suggested_media.poster" alt="Poster for selected media" />
         </a>
         <p>
           <b>Released: {{ comment.suggested_media.released }}</b>
@@ -209,6 +204,10 @@ export default {
           .then(response => {
             console.log(response.data);
             this.comments.push(response.data);
+            this.commentText = "";
+            this.similarity = 1;
+            this.enjoyability = 1;
+            this.suggestedMedia = "";
             this.commentShow = false;
           })
           .catch(error => {

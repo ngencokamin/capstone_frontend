@@ -32,10 +32,7 @@
       <h2>Media</h2>
       <h4>{{ comment.media.title }}</h4>
       <router-link :to="`/media/${comment.media.id}`">
-        <img
-          :src="comment.media.poster ? comment.media.poster : require('../assets/censorposter.png')"
-          alt="Poster for selected media"
-        />
+        <img :src="comment.media.poster" alt="Poster for selected media" />
       </router-link>
       <p>
         <b>Released: {{ comment.media.released }}</b>
@@ -60,10 +57,7 @@
       <h2>Suggested Media</h2>
       <h4>{{ comment.suggested_media.title }}</h4>
       <router-link :to="`/media/${comment.suggested_media.id}`">
-        <img
-          :src="comment.suggested_media.poster ? comment.suggested_media.poster : require('../assets/censorposter.png')"
-          alt="Poster for selected media"
-        />
+        <img :src="comment.suggested_media.poster" alt="Poster for selected media" />
       </router-link>
       <p>
         <b>Released: {{ comment.suggested_media.released }}</b>
@@ -75,6 +69,8 @@
       <br />
       <small>Comment created {{ formatDate(comment.created_at) }}&nbsp;</small>
       <small v-if="comment.created_at != comment.updated_at">(edited {{ formatDate(comment.updated_at) }})</small>
+      <br />
+      <button v-on:click="destroyComment(comment)" v-if="user.id == $parent.userID()">Delete Comment</button>
       <hr />
     </div>
   </div>
@@ -100,6 +96,21 @@ export default {
     });
   },
   methods: {
+    destroyComment: function(comment) {
+      if (confirm("Are you sure you want to delete this comment?")) {
+        axios
+          .delete(`/api/comments/${comment.id}`)
+          .then(response => {
+            console.log(response.data.message);
+            alert(response.data.message);
+            this.user.comments.splice(this.user.comments.indexOf(comment), 1);
+          })
+          .catch(error => {
+            this.errors = error.response;
+            alert("Error! Couldn't delete comment");
+          });
+      }
+    },
     formatDate(date) {
       return moment(date).fromNow();
     },
