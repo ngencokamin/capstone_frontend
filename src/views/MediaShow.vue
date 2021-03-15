@@ -46,32 +46,6 @@
       </datalist>
     </form>
 
-    <!-- <div align="center" v-if="commentShow">
-      <ul>
-        <li class="text-danger" v-for="error in errors" v-bind:key="error.id">
-          {{ error }}
-        </li>
-      </ul>
-      <input type="text" v-model="suggestedMedia" placeholder="Type to search for shows" list="titles" />
-
-      <router-link :to="{ path: '/media/new', query: { search: suggestedMedia } }">
-        <button>Add new show</button>
-      </router-link>
-      <br />
-      <label for="similarity">Similarity:</label>
-      <input type="number" id="similarity" v-model="similarity" />
-      <br />
-      <label for="enjoyability">Enjoyability:</label>
-      <input type="number" id="enjoyability" v-model="enjoyability" />
-      <br />
-      <label for="commentText">Additional comments:</label>
-      <textarea name="commentText" id="commentText" v-model="commentText" cols="30" rows="10"></textarea>
-      <br />
-      <button v-on:click="addComment()">Add Comment</button>
-
-      
-    </div> -->
-
     <br />
     <br />
 
@@ -160,25 +134,6 @@
           <br />
           <button v-on:click="destroyComment(comment)" type="button">Delete Comment</button>
         </form>
-        <!-- <span v-if="comment.id == editCommentID">
-          <h2>Edit Comment</h2>
-          <h2>User Comment</h2>
-          <textarea name="comment" cols="30" rows="10" v-model="comment.text"></textarea>
-          <hr />
-          <h2>Verdict</h2>
-          <p>
-            <b>Similarity:</b>
-            <input type="number" v-model="comment.similarity" />
-          </p>
-          <p>
-            <b>Enjoyability:</b>
-            <input type="number" v-model="comment.enjoyability" />
-          </p>
-          <button v-on:click="editCommentID = 0">Cancel Changes</button>
-          <button v-on:click="updateComment(comment)">Update Comment</button>
-          <br />
-          <button v-on:click="destroyComment(comment)">Delete Comment</button>
-        </span> -->
       </div>
 
       <br />
