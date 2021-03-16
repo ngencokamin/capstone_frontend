@@ -10,6 +10,9 @@
     <router-link :to="`/users/me/edit`" v-if="user.id == this.$parent.userID()">
       <button>Edit profile</button>
     </router-link>
+    <router-link :to="`/watchlist/${user.id}`">
+      <button>{{ user.username }}'s watchlist</button>
+    </router-link>
     <div v-if="user.favorite_media">
       <hr />
       <h2>Favorite Show</h2>

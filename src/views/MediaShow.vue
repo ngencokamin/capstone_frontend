@@ -8,6 +8,8 @@
       <b>{{ media.plot }}</b>
     </p>
     <small>Rated: {{ media.rated }} | IMDb Rating: {{ media.imdb_rating }}</small>
+    <br />
+    <button v-on:click="addSaved(media)">Add to watchlist</button>
     <hr />
     <h2>Comments</h2>
     <button v-on:click="newComment()" v-if="!commentShow && $parent.loggedIn()">New Comment</button>
@@ -75,6 +77,8 @@
         <small>
           Rated: {{ comment.suggested_media.rated }} | IMDb Rating: {{ comment.suggested_media.imdb_rating }}
         </small>
+        <br />
+        <button v-on:click="addSaved(media)">Add to watchlist</button>
         <hr />
         <!-- Information is shown unless edit button is clicked -->
         <span v-if="editCommentID != comment.id">
@@ -230,7 +234,6 @@ export default {
       };
       axios.patch(`/api/comments/${comment.id}`, params).then(response => {
         console.log(response.data);
-        // comment.edited = true;
         this.editCommentID = 0;
       });
     },
@@ -245,7 +248,7 @@ export default {
           })
           .catch(error => {
             this.errors = error.response.data.errors;
-            alert("Error! Couldn't delete user");
+            alert("Error! Couldn't delete comment");
           });
       }
     },
@@ -280,6 +283,23 @@ export default {
             comment.voted = value;
           });
       }
+    },
+    addSaved: function(media) {
+      var params = {
+        media_id: media.id,
+      };
+      axios
+        .post("/api/saved_shows", params)
+        .then(response => {
+          console.log(response.data);
+          alert(`${this.media.title} has been added to your watchlist`);
+        })
+        .catch(error => {
+          this.errors = [error.response.data.errors];
+          if (error.response.data.errors == "Media has already been taken") {
+            alert(`ERROR: ${this.media.title} is already on your watchlist`);
+          }
+        });
     },
   },
 };

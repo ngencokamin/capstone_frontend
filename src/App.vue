@@ -11,6 +11,8 @@
       <span v-else>
         <a :href="`/users/${userID()}`">Profile</a>
         |
+        <a :href="`/watchlist/${userID()}`">My Watchlist</a>
+        |
         <router-link to="/logout">Logout</router-link>
       </span>
     </div>
