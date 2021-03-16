@@ -52,7 +52,7 @@
     <br />
 
     <!-- Comments section -->
-    <div v-for="comment in orderBy(media.comments, 'votes', -1)" :key="comment.id" align="center">
+    <div v-for="comment in orderBy(media.comments, 'vote_total', -1)" :key="comment.id" align="center">
       <div class="boxxed" style="padding-bottom: 5px;">
         <img
           :src="comment.user.profile_picture ? comment.user.profile_picture : require('../assets/default.jpeg')"
@@ -78,7 +78,7 @@
           Rated: {{ comment.suggested_media.rated }} | IMDb Rating: {{ comment.suggested_media.imdb_rating }}
         </small>
         <br />
-        <button v-on:click="addSaved(media)">Add to watchlist</button>
+        <button v-on:click="addSaved(comment.suggested_media)">Add to watchlist</button>
         <hr />
         <!-- Information is shown unless edit button is clicked -->
         <span v-if="editCommentID != comment.id">
@@ -292,12 +292,12 @@ export default {
         .post("/api/saved_shows", params)
         .then(response => {
           console.log(response.data);
-          alert(`${this.media.title} has been added to your watchlist`);
+          alert(`${media.title} has been added to your watchlist`);
         })
         .catch(error => {
           this.errors = [error.response.data.errors];
           if (error.response.data.errors == "Media has already been taken") {
-            alert(`ERROR: ${this.media.title} is already on your watchlist`);
+            alert(`ERROR: ${media.title} is already on your watchlist`);
           }
         });
     },
