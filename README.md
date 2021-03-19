@@ -16,9 +16,11 @@
 - Users can edit or delete their own comments
 - Users can vote up or down on comments depending on if they agree with the comment
 - Users can pick a favorite show to display in their profile
+- Users can add shows to an in-site watchlist
 
 ## Todo
 
+- Optional trello integration to sync users' watchlists with a trello board
 - Add theme to site
 - Add screenshots to README
 
