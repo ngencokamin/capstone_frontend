@@ -31,6 +31,11 @@
         <label v-if="!profanityFilter">Off</label>
         <label v-if="profanityFilter">On</label>
       </div>
+      <div class="form-group">
+        <button v-on:click="addTrello()" type="button">
+          Add optional trello integration to watchlist
+        </button>
+      </div>
       <input type="submit" class="btn btn-primary" value="Submit" />
     </form>
   </div>
@@ -38,7 +43,6 @@
 
 <script>
 import axios from "axios";
-
 export default {
   data: function() {
     return {
@@ -46,11 +50,54 @@ export default {
       email: "",
       password: "",
       passwordConfirmation: "",
+      trelloListID: "",
       profanityFilter: false,
       errors: [],
     };
   },
   methods: {
+    addTrello: function() {
+      if (!localStorage.getItem("trello_token")) {
+        var completeCreationSuccess = function(data) {
+          console.log("List created successfully.");
+          this.trelloListID = data.id;
+        }.bind(this);
+
+        var boardCreationSuccess = function(data) {
+          console.log("Board created successfully.");
+          var boardID = data.id;
+          console.log(boardID);
+          var newList = {
+            name: "Watchlist",
+            idBoard: boardID,
+          };
+          window.Trello.post("/lists/", newList, completeCreationSuccess);
+        };
+        var authenticationSuccess = function() {
+          console.log("Successful authentication");
+          var newBoard = {
+            name: "It's Over, Isn't It?",
+            defaultLists: false,
+            desc: "Pretty please don't delete this! Things will break!",
+          };
+          window.Trello.post("/boards/", newBoard, boardCreationSuccess);
+        };
+
+        var authenticationFailure = function() {
+          console.log("Failed authentication");
+        };
+        window.Trello.authorize({
+          type: "popup",
+          name: "It's Over, Isn't It?",
+          scope: {
+            read: "true",
+            write: "true",
+          },
+          success: authenticationSuccess,
+          error: authenticationFailure,
+        });
+      }
+    },
     login: function() {
       var params = {
         email: this.email,
@@ -79,11 +126,14 @@ export default {
         password_confirmation: this.passwordConfirmation,
         profanity_filter: this.profanityFilter,
       };
+      if (this.trelloListID) {
+        params.trello_list_id = this.trelloListID;
+        localStorage.setItem("trelloListID", this.trelloListID);
+      }
       axios
         .post("/api/users", params)
         .then(response => {
           console.log(response.data);
-          // this.$router.push("/login");
           this.login();
         })
         .catch(error => {

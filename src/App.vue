@@ -59,8 +59,8 @@ export default {
     userID: function() {
       return localStorage.getItem("user_id");
     },
-    trelloToken: function() {
-      return localStorage.getItem("trello_token");
+    trelloListID: function() {
+      return localStorage.getItem("trelloListID");
     },
   },
 };
