@@ -45,12 +45,22 @@
 
 <script>
 export default {
+  mounted() {
+    if (document.getElementById("trello")) return;
+    var scriptTag = document.createElement("script");
+    scriptTag.src = `https://trello.com/1/client.js?key=${process.env.VUE_APP_TRELLO_KEY}`;
+    scriptTag.id = "trello";
+    document.getElementsByTagName("head")[0].appendChild(scriptTag);
+  },
   methods: {
     loggedIn: function() {
       return localStorage.getItem("jwt");
     },
     userID: function() {
       return localStorage.getItem("user_id");
+    },
+    trelloToken: function() {
+      return localStorage.getItem("trello_token");
     },
   },
 };

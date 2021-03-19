@@ -7,6 +7,7 @@
     </ul>
     <h1 v-if="saved.length > 0">{{ saved[0].info.user.username }}'s Saved Shows</h1>
     <h1 v-else>No saved shows found</h1>
+    <button v-on:click="trelloTest()">Test trello</button>
     <div v-for="media in orderBy(saved, 'info.created_at', -1)" :key="media.id">
       <h2>{{ media.title }}</h2>
       <img :src="media.poster" alt="Poster for listed media" />
@@ -29,6 +30,7 @@
 import axios from "axios";
 import Vue2Filters from "vue2-filters";
 import moment from "moment";
+
 export default {
   mixins: [Vue2Filters.mixin],
   data: function() {
@@ -46,6 +48,26 @@ export default {
     });
   },
   methods: {
+    trelloTest: function() {
+      var authenticationSuccess = function() {
+        console.log("Successful authentication");
+      };
+
+      var authenticationFailure = function() {
+        console.log("Failed authentication");
+      };
+      window.Trello.authorize({
+        type: "popup",
+        name: "Getting Started Application",
+        scope: {
+          read: "true",
+          write: "true",
+        },
+        expiration: "never",
+        success: authenticationSuccess,
+        error: authenticationFailure,
+      });
+    },
     formatDate: function(date) {
       return moment(date).fromNow();
     },
