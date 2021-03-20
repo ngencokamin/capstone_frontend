@@ -73,6 +73,17 @@ export default {
 
         //   window.Trello.post("/cards/", newCard, creationSuccess);
         // }
+        var deleteSuccess = function() {
+          console.log("Card deleted successfully");
+        };
+
+        if (this.$parent.trelloListID) {
+          var options = {
+            interactive: false,
+          };
+          window.Trello.authorize(options);
+          window.Trello.del(`/cards/${saved.info.trello_id}`, deleteSuccess);
+        }
         axios
           .delete(`/api/saved_shows/${saved.info.id}`)
           .then(response => {
