@@ -9,7 +9,7 @@
     </p>
     <small>Rated: {{ media.rated }} | IMDb Rating: {{ media.imdb_rating }}</small>
     <br />
-    <button v-on:click="addSaved(media)">Add to watchlist</button>
+    <button v-on:click="addSavedTrello(media)">Add to watchlist</button>
     <hr />
     <h2>Comments</h2>
     <button v-on:click="newComment()" v-if="!commentShow && $parent.loggedIn()">New Comment</button>
@@ -78,7 +78,7 @@
           Rated: {{ comment.suggested_media.rated }} | IMDb Rating: {{ comment.suggested_media.imdb_rating }}
         </small>
         <br />
-        <button v-on:click="addSaved(comment.suggested_media)">Add to watchlist</button>
+        <button v-on:click="addSavedTrello(comment.suggested_media)">Add to watchlist</button>
         <hr />
         <!-- Information is shown unless edit button is clicked -->
         <span v-if="editCommentID != comment.id">
@@ -284,10 +284,40 @@ export default {
           });
       }
     },
-    addSaved: function(media) {
+    addSavedTrello: function(media) {
+      if (this.$parent.trelloListID()) {
+        var options = {
+          interactive: false,
+        };
+        window.Trello.authorize(options);
+
+        var creationSuccess = function(data) {
+          console.log("Card created successfully.");
+          this.addSavedBackend(media, data.id);
+        }.bind(this);
+
+        var newCard = {
+          name: media.title,
+          desc: `![](${media.poster})\n${media.plot}`,
+          // Place this card at the top of our list
+          idList: this.$parent.trelloListID(),
+          pos: "top",
+        };
+
+        window.Trello.post("/cards/", newCard, creationSuccess);
+      } else {
+        this.addSavedBackend(media);
+      }
+    },
+    addSavedBackend: function(media, trello_id) {
       var params = {
         media_id: media.id,
       };
+      if (trello_id) {
+        params.trello_id = trello_id;
+      }
+      console.log(media.title);
+      console.log(params);
       axios
         .post("/api/saved_shows", params)
         .then(response => {
@@ -298,8 +328,12 @@ export default {
           this.errors = [error.response.data.errors];
           if (error.response.data.errors == "Media has already been taken") {
             alert(`ERROR: ${media.title} is already on your watchlist`);
+            window.Trello.del(`/cards/${trello_id}`, deletionSuccess);
           }
         });
+      var deletionSuccess = function() {
+        console.log("Card removed successfully.");
+      };
     },
   },
 };

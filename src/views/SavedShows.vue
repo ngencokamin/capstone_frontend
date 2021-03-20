@@ -53,6 +53,26 @@ export default {
     },
     destroySaved: function(saved) {
       if (confirm(`Are you sure you want to delete remove ${saved.title} from your watchlist?`)) {
+        // if (this.$parent.trelloListID) {
+        //   var options = {
+        //     interactive: false,
+        //   };
+        //   window.Trello.authorize(options);
+        //   var creationSuccess = function(data) {
+        //     console.log("Card created successfully.");
+        //     params.cardID = data.id;
+        //   };
+
+        //   var newCard = {
+        //     name: media.title,
+        //     desc: `![](${media.poster})\n${media.plot}`,
+        //     // Place this card at the top of our list
+        //     idList: "6054f74f014a6a2325892b16",
+        //     pos: "top",
+        //   };
+
+        //   window.Trello.post("/cards/", newCard, creationSuccess);
+        // }
         axios
           .delete(`/api/saved_shows/${saved.info.id}`)
           .then(response => {

@@ -43,6 +43,20 @@ export default {
           axios.defaults.headers.common["Authorization"] = "Bearer " + response.data.jwt;
           localStorage.setItem("jwt", response.data.jwt);
           localStorage.setItem("user_id", response.data.user_id);
+          if (response.data.trello) {
+            localStorage.setItem("trelloListID", response.data.trello);
+            window.Trello.authorize({
+              type: "popup",
+              name: "Getting Started Application",
+              scope: {
+                read: "true",
+                write: "true",
+              },
+              expiration: "never",
+              success: authenticationSuccess,
+              error: authenticationFailure,
+            });
+          }
           this.$router.push("/");
         })
         .catch(error => {
@@ -51,6 +65,13 @@ export default {
           this.email = "";
           this.password = "";
         });
+      var authenticationSuccess = function() {
+        console.log("Successful authentication");
+      };
+
+      var authenticationFailure = function() {
+        console.log("Failed authentication");
+      };
     },
   },
 };
