@@ -60,7 +60,6 @@ export default {
       if (!localStorage.getItem("trello_token")) {
         var completeCreationSuccess = function(data) {
           console.log("List created successfully.");
-          console.log(data);
           console.log(data.id);
           this.trelloListID = data.id;
         }.bind(this);

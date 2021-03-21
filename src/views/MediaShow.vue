@@ -286,10 +286,7 @@ export default {
     },
     addSavedTrello: function(media) {
       if (this.$parent.trelloListID()) {
-        var options = {
-          interactive: false,
-        };
-        window.Trello.authorize(options);
+        window.Trello.authorize({ interactive: false });
 
         var creationSuccess = function(data) {
           console.log("Card created successfully.");

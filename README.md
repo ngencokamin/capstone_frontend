@@ -17,10 +17,10 @@
 - Users can vote up or down on comments depending on if they agree with the comment
 - Users can pick a favorite show to display in their profile
 - Users can add shows to an in-site watchlist
+- Optional Trello integration to sync users' watchlists with a Trello board
 
 ## Todo
 
-- Optional trello integration to sync users' watchlists with a trello board
 - Add theme to site
 - Add screenshots to README
 
