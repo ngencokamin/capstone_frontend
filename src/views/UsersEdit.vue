@@ -47,12 +47,12 @@
         <label v-if="user.profanity_filter">On</label>
       </div>
       <div class="form-group" v-if="!$parent.trelloListID()">
-        <button v-on:click="addTrello()" type="button">
+        <button v-on:click="addTrello()" type="button" :disabled="trello">
           Add optional Trello integration to watchlist
         </button>
       </div>
       <div class="form-group" v-else>
-        <button v-on:click="removeTrello()" type="button">
+        <button v-on:click="removeTrello()" type="button" :disabled="!trello">
           Remove Trello integration
         </button>
       </div>
@@ -79,6 +79,7 @@ export default {
       allMedia: [],
       favoriteMedia: "",
       trelloListID: "",
+      trello: this.$parent.trelloListID(),
     };
   },
   created: function() {
@@ -121,9 +122,6 @@ export default {
       if (this.image) {
         formData.append("profile_picture", this.image);
       }
-      if (this.trelloListID) {
-        formData.append("trello_list_id", this.trelloListID);
-      }
       formData.append("profanity_filter", this.user.profanity_filter);
       if (this.showFavorite) {
         if (this.allMedia.find(this.findMedia)) {
@@ -155,6 +153,19 @@ export default {
             localStorage.removeItem("jwt");
             localStorage.removeItem("user_id");
             this.$router.push("/");
+            if (this.$parent.trelloListID()) {
+              var deleteSuccess = function(data) {
+                localStorage.removeItem("trello_token");
+                localStorage.removeItem("trelloListID");
+                console.log(data);
+              };
+              var getIDSuccess = function(data) {
+                console.log(data.idBoard);
+                window.Trello.del(`/boards/${data.idBoard}`, deleteSuccess);
+              };
+              window.Trello.authorize({ interactive: false });
+              window.Trello.lists.get(this.$parent.trelloListID(), getIDSuccess);
+            }
           })
           .catch(error => {
             this.errors = error.response.data.errors;
@@ -168,7 +179,15 @@ export default {
           console.log("List created successfully.");
           console.log(data.id);
           this.trelloListID = data.id;
+          this.trello = true;
           localStorage.setItem("trelloListID", this.trelloListID);
+          alert("Trello integration successfully added.");
+          var params = {
+            trello_list_id: this.trelloListID,
+          };
+          axios.patch("/api/users/me", params).then(response => {
+            console.log(response.data);
+          });
           axios.get(`/api/saved_shows/${this.user.id}`).then(response => {
             console.log(response.data);
             response.data.forEach(savedShow => {
@@ -177,7 +196,6 @@ export default {
                 console.log(data.id);
                 console.log("Card created successfully.");
                 var params = {
-                  add_trello: true,
                   trello_id: data.id,
                 };
                 axios.patch(`/api/saved_shows/${savedShow.info.id}`, params).then(response => {
@@ -238,8 +256,10 @@ export default {
           console.log(response.data);
           localStorage.removeItem("trelloListID");
           localStorage.removeItem("trello_token");
+          this.trello = false;
+          alert("Trello integration successfully removed.");
         });
-      };
+      }.bind(this);
       var getIDSuccess = function(data) {
         console.log(data.idBoard);
         window.Trello.del(`/boards/${data.idBoard}`, deleteSuccess);

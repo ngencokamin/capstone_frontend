@@ -32,7 +32,7 @@
         <label v-if="profanityFilter">On</label>
       </div>
       <div class="form-group">
-        <button v-on:click="addTrello()" type="button">
+        <button v-on:click="addTrello()" type="button" :disabled="trello == true">
           Add optional trello integration to watchlist
         </button>
       </div>
@@ -53,6 +53,7 @@ export default {
       trelloListID: "",
       profanityFilter: false,
       errors: [],
+      trello: false,
     };
   },
   methods: {
@@ -62,6 +63,8 @@ export default {
           console.log("List created successfully.");
           console.log(data.id);
           this.trelloListID = data.id;
+          alert("Trello integration successfully added!");
+          this.trello = true;
         }.bind(this);
 
         var boardCreationSuccess = function(data) {
@@ -86,7 +89,8 @@ export default {
 
         var authenticationFailure = function() {
           console.log("Failed authentication");
-        };
+          this.errors.push("Failed Trello authentication");
+        }.bind(this);
         window.Trello.authorize({
           type: "popup",
           name: "It's Over, Isn't It?",
