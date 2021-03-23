@@ -31,10 +31,6 @@
                         <strong>Released:</strong>
                         {{ media.released }}
                       </li>
-                      <li>
-                        <strong>Year:</strong>
-                        2014
-                      </li>
                     </ul>
                   </div>
                 </div>
@@ -201,10 +197,6 @@
                             <strong>Released:</strong>
                             {{ comment.suggested_media.released }}
                           </li>
-                          <li>
-                            <strong>Year:</strong>
-                            2014
-                          </li>
                         </ul>
                       </div>
                     </div>
@@ -247,7 +239,15 @@
                               class="btn btn-primary btn-raised"
                             >
                               <i class="zmdi zmdi-edit"></i>
-                              Edit Comment
+                              Edit
+                            </button>
+                            <button
+                              v-if="$parent.userID() == comment.user_id"
+                              v-on:click="destroyComment(comment)"
+                              class="btn btn-danger btn-raised"
+                            >
+                              <i class="zmdi zmdi-delete"></i>
+                              Delete
                             </button>
                           </div>
 
@@ -343,7 +343,7 @@
 
                             <div class="form-group row justify-content-end">
                               <div class="col-lg-10">
-                                <button type="submit" class="btn btn-raised btn-primary">Post Comment</button>
+                                <button type="submit" class="btn btn-raised btn-primary">Update</button>
                                 <button type="button" v-on:click="editCommentID = 0" class="btn btn-danger">
                                   Cancel
                                 </button>
@@ -361,96 +361,10 @@
         </div>
       </div>
     </div>
-
-    <!-- My code -->
-
-    <!-- Comments section -->
-    <div v-for="comment in orderBy(media.comments, 'vote_total', -1)" :key="comment.id" align="center">
-      <div class="boxxed" style="padding-bottom: 5px;">
-        <img
-          :src="comment.user.profile_picture ? comment.user.profile_picture : require('../assets/default.jpeg')"
-          alt="User profile picture"
-          style="width: 10%;"
-        />
-        <router-link :to="`/users/${comment.user.id}`">
-          <b>{{ comment.user.username }}</b>
-        </router-link>
-        <hr />
-        <h2>Suggested Media</h2>
-        <h4>{{ comment.suggested_media.title }}</h4>
-        <a :href="`/media/${comment.suggested_media.id}`">
-          <img :src="comment.suggested_media.poster" alt="Poster for selected media" />
-        </a>
-        <p>
-          <b>Released: {{ comment.suggested_media.released }}</b>
-        </p>
-        <p>
-          {{ comment.suggested_media.plot }}
-        </p>
-        <small>
-          Rated: {{ comment.suggested_media.rated }} | IMDb Rating: {{ comment.suggested_media.imdb_rating }}
-        </small>
-        <br />
-        <button v-on:click="addSavedTrello(comment.suggested_media)">Add to watchlist</button>
-        <hr />
-        <!-- Information is shown unless edit button is clicked -->
-        <span v-if="editCommentID != comment.id">
-          <h2>User Comment</h2>
-          <p>
-            {{ comment.text }}
-          </p>
-          <hr />
-          <h2>Verdict</h2>
-          <p>
-            <b>Similarity:</b>
-            {{ comment.similarity }}
-          </p>
-          <p>
-            <b>Enjoyability:</b>
-            {{ comment.enjoyability }}
-          </p>
-          <button v-on:click="addVote(comment, -1)" :disabled="comment.voted == -1">
-            👎
-          </button>
-          {{ comment.vote_total }}
-          <button v-on:click="addVote(comment, 1)" :disabled="comment.voted == 1">
-            👍
-          </button>
-          <br />
-          <small>Created {{ formatDate(comment.created_at) }}&nbsp;</small>
-          <small v-if="comment.created_at != comment.updated_at">(edited {{ formatDate(comment.updated_at) }})</small>
-          <hr v-if="$parent.userID() == comment.user_id" />
-          <button v-if="$parent.userID() == comment.user_id" v-on:click="editCommentID = comment.id">
-            Edit Comment
-          </button>
-        </span>
-        <!-- Shows input fields instead if edit button is clicked -->
-        <form v-on:submit.prevent="updateComment(comment)" v-if="comment.id == editCommentID">
-          <h2>Edit Comment</h2>
-
-          <div class="form-group">
-            <label>User comment:</label>
-            <textarea name="comment" cols="30" rows="10" v-model="comment.text"></textarea>
-          </div>
-          <h2>Verdict</h2>
-          <div class="form-group">
-            <label>Similarity:</label>
-            <input type="number" v-model="comment.similarity" min="1" max="10" />
-          </div>
-          <div class="form-group">
-            <label>Enjoyability:</label>
-            <input type="number" v-model="comment.enjoyability" min="1" max="10" />
-          </div>
-          <button v-on:click="editCommentID = 0" type="button">Cancel Changes</button>
-          <input type="submit" class="btn btn-primary" value="Update" />
-          <br />
-          <button v-on:click="destroyComment(comment)" type="button">Delete Comment</button>
-        </form>
-      </div>
-
-      <br />
-    </div>
   </div>
+  <!-- My code -->
+
+  <!-- Comments section -->
 </template>
 
 <style>

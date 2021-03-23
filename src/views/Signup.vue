@@ -1,6 +1,111 @@
 <template>
   <div class="signup">
-    <form v-on:submit.prevent="submit()">
+    <div class="bg-full-page bg-primary back-fixed">
+      <div class="mw-500 absolute-center">
+        <div class="card color-dark animated zoomInDown animation-delay-5">
+          <div class="card-body">
+            <h2 class="color-primary text-center">We would be honored if you would join us</h2>
+            <form v-on:submit.prevent="submit()">
+              <fieldset>
+                <ul>
+                  <li class="text-danger" v-for="error in errors" v-bind:key="error">
+                    {{ error }}
+                  </li>
+                </ul>
+                <div class="form-group label-floating">
+                  <div class="input-group">
+                    <span class="input-group-addon"><i class="zmdi zmdi-email"></i></span>
+                    <label class="control-label" for="ms-form-email">Email</label>
+                    <input type="text" id="ms-form-email" class="form-control" v-model="email" />
+                  </div>
+                </div>
+                <div class="form-group label-floating">
+                  <div class="input-group">
+                    <span class="input-group-addon"><i class="zmdi zmdi-account"></i></span>
+                    <label class="control-label" for="ms-form-user">Username</label>
+                    <input type="text" id="ms-form-user" class="form-control" v-model="username" />
+                  </div>
+                </div>
+                <div class="form-group label-floating">
+                  <div class="input-group">
+                    <span class="input-group-addon"><i class="zmdi zmdi-lock"></i></span>
+                    <label class="control-label" for="ms-form-pass">Password</label>
+                    <input type="password" id="ms-form-pass" class="form-control" v-model="password" />
+                  </div>
+                </div>
+                <div class="form-group label-floating">
+                  <div class="input-group">
+                    <span class="input-group-addon"><i class="zmdi zmdi-lock"></i></span>
+                    <label class="control-label" for="ms-form-pass-conf">Password Confirmation</label>
+                    <input type="password" id="ms-form-pass-conf" class="form-control" v-model="passwordConfirmation" />
+                  </div>
+                </div>
+                <!-- <div class="form-group label-floating">
+                  <div class="input-group">
+                    <label>Would you like to enable profanity filter?</label>
+                    <input id="profanityFilter" type="checkbox" name="Profanity filter" v-model="profanityFilter" />
+                    <label v-if="!profanityFilter">Off</label>
+                    <label v-if="profanityFilter">On</label>
+                  </div>
+                </div> -->
+                <div class="form-group label-floating">
+                  <div class="input-group">
+                    <div class="checkbox ">
+                      <label>
+                        <input type="checkbox" v-model="profanityFilter" />
+                        Enable profanity filter?
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group label-floating">
+                  <div class="input-group text-center">
+                    <button
+                      class="btn btn-raised btn-linkedin"
+                      data-toggle="tooltip"
+                      data-placement="top"
+                      title="Enabling Trello integration allows automatic syncing of watchlist data to a Trello board for added convenience"
+                      type="button"
+                      v-on:click="addTrello()"
+                      :disabled="trello == true"
+                    >
+                      <i class="fa fa-trello"></i>
+                      Trello (Optional)
+                    </button>
+                  </div>
+                </div>
+
+                <div class="row ">
+                  <div class="col-md-6">
+                    <button class="btn btn-raised btn-primary btn-block">
+                      Sign Up
+                      <i class="zmdi zmdi-long-arrow-right no-mr ml-1"></i>
+                    </button>
+                  </div>
+                  <div class="col-md-6">
+                    <router-link role="button" to="/login">
+                      <button class="btn btn-primary btn-block">
+                        <i class="zmdi zmdi-account mr-1"></i>
+                        Log In
+                      </button>
+                    </router-link>
+                  </div>
+                </div>
+              </fieldset>
+            </form>
+          </div>
+        </div>
+        <div class="text-center animated fadeInUp animation-delay-7">
+          <router-link class="btn btn-white" role="button" to="/">
+            <i class="zmdi zmdi-home"></i>
+            Go Home
+          </router-link>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- my code -->
+  <!-- <form v-on:submit.prevent="submit()">
       <h2>
         We would be honored if you would join us
       </h2>
@@ -38,7 +143,7 @@
       </div>
       <input type="submit" class="btn btn-primary" value="Submit" />
     </form>
-  </div>
+  </div> -->
 </template>
 
 <script>

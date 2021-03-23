@@ -29,21 +29,32 @@
               <a
                 href="javascript:void(0)"
                 class="btn btn-warning btn-raised btn-block animated fadeInUp animation-delay-12"
+                v-if="user.id == this.$parent.userID()"
               >
                 <i class="zmdi zmdi-edit"></i>
                 Edit Profile
               </a>
+              <router-link
+                :to="`/watchlist/${user.id}`"
+                class="btn btn-warning btn-raised btn-block animated fadeInUp animation-delay-12"
+              >
+                <i class="zmdi zmdi-tv"></i>
+                {{ user.username }}'s Watchlist'
+              </router-link>
             </div>
             <div class="col-lg-12 col-md-6 order-md-2 order-lg-3" v-if="user.favorite_media">
               <div class="card animated fadeInUp animation-delay-12">
                 <div class="ms-hero-bg-info ms-hero-img-mountain">
                   <h3 class="color-white index-1 text-center pb-4 pt-4">Favorite Show</h3>
                 </div>
-                <div class="card-body">
+                <div class="card-body text-center">
                   <img :src="user.favorite_media.poster" alt="Poster for user.favorite_media" />
                   <br />
                   <small>
-                    <b>Rated {{ user.favorite_media.rated }} | Released: {{ user.favorite_media.released }}</b>
+                    <b>
+                      Rated {{ user.favorite_media.rated }} | Released: {{ user.favorite_media.released }} | IMDb
+                      Rating: {{ user.favorite_media.imdb_rating }}
+                    </b>
                   </small>
                   <div class="card-body overflow-hidden text-center">
                     <h4 class="color-info">{{ user.favorite_media.title }}</h4>
@@ -52,290 +63,121 @@
                     </p>
                     <router-link :to="`/media/${user.favorite_media.id}`">
                       <button class="btn btn-primary btn-raised">
-                        <i class="zmdi zmdi-globe"></i>
+                        <i class="zmdi zmdi-comment"></i>
                         View Comments
                       </button>
                     </router-link>
                   </div>
-                  <!-- <div class="ms-media-list">
-                    <div class="media mb-2">
-                      <a class="mr-3" href="#">
-                        <img class="media-object" src="assets/img/demo/avatar6.jpg" />
-                      </a>
-                      <div class="media-body">
-                        <h4 class="mt-0 mb-0 color-warning">Maria Sharaphova</h4>
-                        <a href="mailto:joe@example.com?subject=feedback">maria.sha@example.com</a>
-                        <div class="">
-                          <a href="javascript:void(0)" class="btn-circle btn-circle-xs no-mr-md btn-facebook">
-                            <i class="zmdi zmdi-facebook"></i>
-                          </a>
-                          <a href="javascript:void(0)" class="btn-circle btn-circle-xs no-mr-md btn-twitter">
-                            <i class="zmdi zmdi-twitter"></i>
-                          </a>
-                          <a href="javascript:void(0)" class="btn-circle btn-circle-xs no-mr-md btn-instagram">
-                            <i class="zmdi zmdi-instagram"></i>
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="media mb-2">
-                      <div class="media-left media-middle">
-                        <a class="mr-3" href="#">
-                          <img class="media-object" src="assets/img/demo/avatar3.jpg" />
-                        </a>
-                      </div>
-                      <div class="media-body">
-                        <h4 class="mt-0 mb-0 color-warning">Rafael Nadal</h4>
-                        <a href="mailto:joe@example.com?subject=feedback">rafa.nad@example.com</a>
-                        <div class="">
-                          <a href="javascript:void(0)" class="btn-circle btn-circle-xs no-mr-md btn-facebook">
-                            <i class="zmdi zmdi-facebook"></i>
-                          </a>
-                          <a href="javascript:void(0)" class="btn-circle btn-circle-xs no-mr-md btn-twitter">
-                            <i class="zmdi zmdi-twitter"></i>
-                          </a>
-                          <a href="javascript:void(0)" class="btn-circle btn-circle-xs no-mr-md btn-instagram">
-                            <i class="zmdi zmdi-instagram"></i>
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="media mb-2">
-                      <div class="media-left media-middle">
-                        <a class="mr-3" href="#">
-                          <img class="media-object" src="assets/img/demo/avatar5.jpg" />
-                        </a>
-                      </div>
-                      <div class="media-body">
-                        <h4 class="mt-0 mb-0 color-warning">Roger Federer</h4>
-                        <a href="mailto:joe@example.com?subject=feedback">roger.fef@example.com</a>
-                        <div class="">
-                          <a href="javascript:void(0)" class="btn-circle btn-circle-xs no-mr-md btn-facebook">
-                            <i class="zmdi zmdi-facebook"></i>
-                          </a>
-                          <a href="javascript:void(0)" class="btn-circle btn-circle-xs no-mr-md btn-twitter">
-                            <i class="zmdi zmdi-twitter"></i>
-                          </a>
-                          <a href="javascript:void(0)" class="btn-circle btn-circle-xs no-mr-md btn-instagram">
-                            <i class="zmdi zmdi-instagram"></i>
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                  </div> -->
                 </div>
               </div>
             </div>
           </div>
         </div>
         <div class="col-lg-8">
-          <h2 class="color-primary text-center mt-4 mb-2">Recent Activity</h2>
+          <h2 class="color-primary text-center mt-4 mb-2">Comments</h2>
+          <h3 v-if="user.comments.length == 0" class="color-primary text-center mt-4 mb-2">No Comments Found</h3>
           <div class="row">
             <div class="col-lg-12">
-              <ul class="ms-timeline">
+              <ul class="ms-timeline" v-for="comment in orderBy(user.comments, 'updated_at', -1)" :key="comment.id">
                 <li class="ms-timeline-item wow materialUp">
                   <div class="ms-timeline-date">
                     <time class="timeline-time" datetime="">
-                      2016
-                      <span>March</span>
+                      <span>{{ formatDate(comment.updated_at)[0] }}</span>
+                      {{ formatDate(comment.updated_at)[1] }}
                     </time>
-                    <i class="ms-timeline-point bg-royal"></i>
-                    <img src="assets/img/demo/avatar6.jpg" class="ms-timeline-point-img" />
+                    <i class="ms-timeline-point bg-primary"></i>
                   </div>
-                  <div class="card card-royal">
+                  <div class="card card-primary">
                     <div class="card-header">
-                      <h3 class="card-title">Card Title</h3>
+                      <h1 class="card-title text-center">Original Media</h1>
+                    </div>
+
+                    <div class="card-body">
+                      <div class="row">
+                        <div class="col-sm-4 text-center">
+                          <img
+                            :src="comment.media.poster"
+                            alt="Poster for original media being commented on"
+                            class="img-fluid"
+                          />
+                          <br />
+                          <small>
+                            <b>{{ comment.media.released }} | {{ comment.media.rated }}</b>
+                          </small>
+                        </div>
+                        <div class="col-sm-8">
+                          <h1>{{ comment.media.title }}</h1>
+                          <p>
+                            {{ comment.media.plot }}
+                          </p>
+                        </div>
+                        <router-link :to="`/media/${comment.media.id}`">
+                          <button class="btn btn-primary btn-raised">
+                            <i class="zmdi zmdi-comment"></i>
+                            All Comments
+                          </button>
+                        </router-link>
+                      </div>
+                    </div>
+                    <div class="card-header">
+                      <h1 class="card-title text-center">Suggested Media</h1>
                     </div>
                     <div class="card-body">
                       <div class="row">
-                        <div class="col-sm-4">
-                          <img src="assets/img/demo/office1.jpg" alt="" class="img-fluid" />
+                        <div class="col-sm-4 text-center">
+                          <img
+                            :src="comment.suggested_media.poster"
+                            alt="Poster for suggested media from comment"
+                            class="img-fluid"
+                          />
+                          <br />
+                          <small>
+                            <b>{{ comment.suggested_media.released }} | {{ comment.suggested_media.rated }}</b>
+                          </small>
                         </div>
                         <div class="col-sm-8">
                           <p>
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laborum, praesentium, quam! Quia
-                            fugiat aperiam.
-                          </p>
-                          <p>
-                            Perspiciatis soluta voluptate dolore officiis libero repellat cupiditate explicabo atque
-                            facere aliquam.
+                            {{ comment.suggested_media.plot }}
                           </p>
                         </div>
+                        <router-link :to="`/media/${comment.suggested_media.id}`">
+                          <button class="btn btn-primary btn-raised">
+                            <i class="zmdi zmdi-comment"></i>
+                            All Comments
+                          </button>
+                        </router-link>
                       </div>
                     </div>
-                  </div>
-                </li>
-                <li class="ms-timeline-item wow materialUp">
-                  <div class="ms-timeline-date">
-                    <time class="timeline-time" datetime="">
-                      2015
-                      <span>October</span>
-                    </time>
-                    <i class="ms-timeline-point bg-info"></i>
-                  </div>
-                  <div class="card card-info">
                     <div class="card-header">
-                      <h3 class="card-title">Card Title</h3>
-                    </div>
-                    <div class="list-group">
-                      <a href="javascript:void(0)" class="list-group-item withripple">
-                        <i class="zmdi zmdi-favorite"></i>
-                        Cras justo odio
-                        <span class="badge badge-default pull-right">Active</span>
-                      </a>
-                      <a href="javascript:void(0)" class="list-group-item withripple">
-                        <i class="zmdi zmdi-cocktail"></i>
-                        Dapibus ac facilisis in
-                        <span class="badge badge-primary pull-right">Other</span>
-                      </a>
-                      <a href="javascript:void(0)" class="list-group-item withripple active">
-                        <i class="zmdi zmdi-cast"></i>
-                        Morbi leo risus
-                        <span class="badge badge-default pull-right">New</span>
-                      </a>
-                      <a href="javascript:void(0)" class="list-group-item withripple">
-                        <i class="zmdi zmdi-city"></i>
-                        Porta ac consectetur ac
-                        <span class="badge badge-warning pull-right">Two words</span>
-                      </a>
-                      <a href="javascript:void(0)" class="list-group-item withripple">
-                        <i class="zmdi zmdi-chart"></i>
-                        Vestibulum at eros
-                        <span class="badge badge-success pull-right">Success</span>
-                      </a>
-                    </div>
-                  </div>
-                </li>
-                <li class="ms-timeline-item wow materialUp">
-                  <div class="ms-timeline-date">
-                    <time class="timeline-time" datetime="">
-                      2015
-                      <span>October</span>
-                    </time>
-                    <i class="ms-timeline-point bg-success"></i>
-                  </div>
-                  <div class="card card-success-inverse">
-                    <div class="card-body">
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Necessitatibus officiis autem magni et,
-                      nisi eveniet nulla magnam tenetur voluptatem dolore, assumenda delectus error porro animi
-                      architecto dolorum quod veniam nesciunt.
-                    </div>
-                  </div>
-                </li>
-                <li class="ms-timeline-item wow materialUp">
-                  <div class="ms-timeline-date">
-                    <time class="timeline-time" datetime="">
-                      2015
-                      <span>February</span>
-                    </time>
-                    <i class="ms-timeline-point bg-warning"></i>
-                    <img src="assets/img/demo/avatar2.jpg" class="ms-timeline-point-img" />
-                  </div>
-                  <div class="card card-warning">
-                    <div class="card-header">
-                      <h3 class="card-title">Card Title</h3>
+                      <h1 class="card-title text-center">Verdict</h1>
                     </div>
                     <div class="card-body">
-                      <p>
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nam, nulla recusandae blanditiis
-                        architecto soluta culpa obcaecati quis earum atque consequuntur.
-                      </p>
-                      <div class="row">
-                        <div class="col-sm-4">
-                          <img src="assets/img/demo/office2.jpg" alt="" class="img-fluid" />
+                      <div class="row text-center">
+                        <div class="col-lg-6">
+                          <div class="card-body">
+                            <h3 class="color-primary">User Comment</h3>
+                            <p>
+                              {{ comment.text }}
+                            </p>
+                          </div>
                         </div>
-                        <div class="col-sm-4">
-                          <img src="assets/img/demo/office3.jpg" alt="" class="img-fluid" />
-                        </div>
-                        <div class="col-sm-4">
-                          <img src="assets/img/demo/office4.jpg" alt="" class="img-fluid" />
+
+                        <div class="col-lg-6">
+                          <div class="card-body">
+                            <h3 class="color-primary">Rating</h3>
+                            <ul class="list-unstyled">
+                              <li>
+                                <strong>Similarity:</strong>
+                                {{ comment.similarity }}
+                              </li>
+                              <li>
+                                <strong>Enjoyability:</strong>
+                                {{ comment.enjoyability }}
+                              </li>
+                            </ul>
+                          </div>
                         </div>
                       </div>
-                      <br />
-                      <p>
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reiciendis, ipsum voluptates eius
-                        placeat dolorum reprehenderit ducimus accusamus magni aspernatur at dolore assumenda quae
-                        suscipit enim veritatis obcaecati molestias laudantium maxime!
-                      </p>
-                    </div>
-                  </div>
-                </li>
-                <li class="ms-timeline-item wow materialUp">
-                  <div class="ms-timeline-date">
-                    <time class="timeline-time" datetime="">
-                      2014
-                      <span>July</span>
-                    </time>
-                    <i class="ms-timeline-point"></i>
-                  </div>
-                  <div class="card">
-                    <blockquote class="blockquote blockquote-color-bg-primary withripple color-white">
-                      <p>
-                        <strong>Blockquote in timeline!</strong>
-                        consectetur adipiscing elit. Integer sodales sagittis magna. consectetur adipiscing elit sed
-                        consequat, quam semper libero.
-                      </p>
-                      <footer>
-                        Someone famous in
-                        <cite title="Source Title">Source Title</cite>
-                      </footer>
-                    </blockquote>
-                  </div>
-                </li>
-                <li class="ms-timeline-item wow materialUp">
-                  <div class="ms-timeline-date">
-                    <time class="timeline-time" datetime="">
-                      2014
-                      <span>January</span>
-                    </time>
-                    <i class="ms-timeline-point bg-info"></i>
-                    <img src="assets/img/demo/avatar3.jpg" class="ms-timeline-point-img" />
-                  </div>
-                  <div class="card card-info">
-                    <div class="card-header">
-                      <h3 class="card-title">Card Title</h3>
-                    </div>
-                    <div class="js-player" data-plyr-provider="youtube" data-plyr-embed-id="9ZfN87gSjvI"></div>
-                  </div>
-                </li>
-                <li class="ms-timeline-item wow materialUp">
-                  <div class="ms-timeline-date">
-                    <time class="timeline-time" datetime="">
-                      2013
-                      <span>June</span>
-                    </time>
-                    <i class="ms-timeline-point"></i>
-                  </div>
-                  <div class="card">
-                    <div class="ms-hero-bg-primary ms-hero-img-coffee">
-                      <h3 class="color-white index-1 text-center no-m pt-4">Victoria Smith</h3>
-                      <div class="color-medium index-1 text-center np-m">@vic_smith</div>
-                      <img src="assets/img/demo/avatar1.jpg" alt="..." class="img-avatar-circle" />
-                    </div>
-                    <div class="card-body pt-4 text-center">
-                      <h3 class="color-primary">Bio</h3>
-                      <p>
-                        Lorem ipsum dolor sit amet, consectetur alter adipisicing elit. Facilis, natuse inse voluptates
-                        officia repudiandae beatae magni es magnam autem molestias.
-                      </p>
-                      <a
-                        href="javascript:void(0)"
-                        class="btn-circle btn-circle-raised btn-circle-xs mt-1 mr-1 no-mr-md btn-facebook"
-                      >
-                        <i class="zmdi zmdi-facebook"></i>
-                      </a>
-                      <a
-                        href="javascript:void(0)"
-                        class="btn-circle btn-circle-raised btn-circle-xs mt-1 mr-1 no-mr-md btn-twitter"
-                      >
-                        <i class="zmdi zmdi-twitter"></i>
-                      </a>
-                      <a
-                        href="javascript:void(0)"
-                        class="btn-circle btn-circle-raised btn-circle-xs mt-1 mr-1 no-mr-md btn-instagram"
-                      >
-                        <i class="zmdi zmdi-instagram"></i>
-                      </a>
                     </div>
                   </div>
                 </li>
@@ -463,7 +305,8 @@ export default {
       }
     },
     formatDate(date) {
-      return moment(date).fromNow();
+      // return moment(date).fromNow();
+      return [moment(date).format("MMMM Do"), moment(date).format("YYYY")];
     },
   },
 };

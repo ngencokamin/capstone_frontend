@@ -1,22 +1,59 @@
 <template>
   <div class="login">
-    <form v-on:submit.prevent="submit()">
-      <h2>Welcome (back) to the world of tomorrow!</h2>
-      <ul>
-        <li class="text-danger" v-for="error in errors" v-bind:key="error">
-          {{ error }}
-        </li>
-      </ul>
-      <div class="form-group">
-        <label>Email:</label>
-        <input type="email" class="form-control" v-model="email" />
+    <div class="bg-full-page bg-primary back-fixed">
+      <div class="mw-500 absolute-center">
+        <div class="card color-dark animated zoomInDown animation-delay-5">
+          <div class="card-body">
+            <h2 class="color-primary text-center">Welcome (back) to the world of tomorrow!</h2>
+            <form v-on:submit.prevent="submit()">
+              <fieldset>
+                <ul>
+                  <li class="text-danger" v-for="error in errors" v-bind:key="error">
+                    {{ error }}
+                  </li>
+                </ul>
+                <div class="form-group label-floating">
+                  <div class="input-group">
+                    <span class="input-group-addon"><i class="zmdi zmdi-email"></i></span>
+                    <label class="control-label" for="ms-form-email">Email</label>
+                    <input type="text" id="ms-form-email" class="form-control" v-model="email" />
+                  </div>
+                </div>
+                <div class="form-group label-floating">
+                  <div class="input-group">
+                    <span class="input-group-addon"><i class="zmdi zmdi-lock"></i></span>
+                    <label class="control-label" for="ms-form-pass">Password</label>
+                    <input type="password" id="ms-form-pass" class="form-control" v-model="password" />
+                  </div>
+                </div>
+                <div class="row ">
+                  <div class="col-md-6">
+                    <button class="btn btn-raised btn-primary btn-block">
+                      Login
+                      <i class="zmdi zmdi-long-arrow-right no-mr ml-1"></i>
+                    </button>
+                  </div>
+                  <div class="col-md-6">
+                    <a href="/signup">
+                      <button class="btn btn-primary btn-block" type="button">
+                        <i class="zmdi zmdi-account-add mr-1"></i>
+                        Sign Up
+                      </button>
+                    </a>
+                  </div>
+                </div>
+              </fieldset>
+            </form>
+          </div>
+        </div>
+        <div class="text-center animated fadeInUp animation-delay-7">
+          <router-link class="btn btn-white" role="button" to="/">
+            <i class="zmdi zmdi-home"></i>
+            Go Home
+          </router-link>
+        </div>
       </div>
-      <div class="form-group">
-        <label>Password:</label>
-        <input type="password" class="form-control" v-model="password" />
-      </div>
-      <input type="submit" class="btn btn-primary" value="Submit" />
-    </form>
+    </div>
   </div>
 </template>
 

@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <nav class="navbar navbar-expand-md  navbar-static ms-navbar ms-navbar-primary navbar-mode">
+    <nav class="navbar navbar-expand-md navbar-static ms-navbar ms-navbar-primary navbar-mode">
       <div class="container container-full">
         <div class="navbar-header">
           <a class="navbar-brand" href="index.html">

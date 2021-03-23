@@ -59,7 +59,7 @@
                   <p class="color-info">{{ media.comment_count }} comments</p>
                   <router-link :to="`/media/${media.id}`">
                     <button class="btn btn-primary btn-raised">
-                      <i class="zmdi zmdi-globe"></i>
+                      <i class="zmdi zmdi-comment"></i>
                       View Comments
                     </button>
                   </router-link>
