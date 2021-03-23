@@ -1,55 +1,300 @@
 <template>
   <div class="media-show" v-if="media">
     <!-- Information about selected  media -->
-    <h1>{{ media.title }}</h1>
-    <img :src="media.poster" alt="Poster for selected media" />
-    <h3>Released: {{ media.released }}</h3>
-    <p>
-      <b>{{ media.plot }}</b>
-    </p>
-    <small>Rated: {{ media.rated }} | IMDb Rating: {{ media.imdb_rating }}</small>
-    <br />
-    <button v-on:click="addSavedTrello(media)">Add to watchlist</button>
-    <hr />
-    <h2>Comments</h2>
-    <button v-on:click="newComment()" v-if="!commentShow && $parent.loggedIn()">New Comment</button>
+    <div class="material-background"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card animated materialUp animation-delay-5">
+            <div class="card-body card-body-big text-center">
+              <h1 class="no-mt">
+                <strong>
+                  {{ media.title }}
+                </strong>
+              </h1>
 
-    <form v-on:submit.prevent="addComment" v-if="commentShow">
-      <ul>
-        <li class="text-danger" v-for="error in errors" v-bind:key="error.id">
-          {{ error }}
-        </li>
-      </ul>
-      <h2>Add Comment</h2>
-      <input type="text" v-model="suggestedMedia" placeholder="Type to search for shows" list="titles" />
+              <img :src="media.poster" alt="" class="img-fluid mb-4" />
+              <div class="row">
+                <div class="col-lg-6">
+                  <div class="card-body">
+                    <h3 class="color-primary">Info</h3>
+                    <ul class="list-unstyled">
+                      <li>
+                        <strong>Rated:</strong>
+                        {{ media.rated }}
+                      </li>
+                      <li>
+                        <strong>IMDb Rating:</strong>
+                        {{ media.imdb_rating }}
+                      </li>
+                      <li>
+                        <strong>Released:</strong>
+                        {{ media.released }}
+                      </li>
+                      <li>
+                        <strong>Year:</strong>
+                        2014
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="col-lg-6">
+                  <div class="card-body">
+                    <h3 class="color-primary">Plot Summary</h3>
+                    <p>
+                      {{ media.plot }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <button v-on:click="addSavedTrello(media)" class="btn btn-primary btn-raised">
+                <i class="zmdi zmdi-favorite-outline"></i>
+                Save to watchlist
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row wow materialUp animation-delay-8">
+        <div class="col-md-12">
+          <h2 class="color-primary right-line">Comments</h2>
 
-      <router-link :to="{ path: '/media/new', query: { search: suggestedMedia } }">
-        <button type="button">Add new show</button>
-      </router-link>
-      <h2>Verdict</h2>
-      <div class="form-group">
-        <label for="similarity">Similarity:</label>
-        <input type="number" id="similarity" v-model="similarity" min="1" max="10" />
-      </div>
-      <div class="form-group">
-        <label for="enjoyability">Enjoyability:</label>
-        <input type="number" id="enjoyability" v-model="enjoyability" min="1" max="10" />
-      </div>
-      <div class="form-group">
-        <label for="commentText">Additional comments:</label>
-        <textarea name="commentText" id="commentText" v-model="commentText" cols="30" rows="10"></textarea>
-      </div>
-      <button v-on:click="commentShow = false" type="button">Cancel</button>
-      <input type="submit" class="btn btn-primary" value="Add" />
-      <datalist id="titles">
-        <option v-for="media in allMedia" :key="media.id">
-          {{ media.title }}
-        </option>
-      </datalist>
-    </form>
+          <div class="row">
+            <button
+              class="btn btn-primary btn-raised mx-auto"
+              v-on:click="newComment()"
+              v-if="!commentShow && $parent.loggedIn()"
+            >
+              Add Comment
+            </button>
+            <div class="col-md-12" v-if="commentShow">
+              <div class="card card-primary animated fadeInUp">
+                <div class="card-body">
+                  <ul>
+                    <li class="text-danger" v-for="error in errors" v-bind:key="error.id">
+                      {{ error }}
+                    </li>
+                  </ul>
+                  <h2 class="color-primary text-center">
+                    Power!
+                    <i>Unlimited</i>
+                    power!
+                  </h2>
+                  <form class="form-horizontal" v-on:submit.prevent="addComment">
+                    <fieldset class="container">
+                      <div class="form-group row">
+                        <label class="control-label col-lg-2" for="addon2">Find or add a show</label>
+                        <div class="input-group col-lg-9">
+                          <input
+                            type="text"
+                            id="addon2"
+                            class="form-control"
+                            list="titles"
+                            v-model="suggestedMedia"
+                            placeholder="Type to search..."
+                          />
+                          <span class="input-group-btn">
+                            <router-link :to="{ path: '/media/new', query: { search: suggestedMedia } }">
+                              <button type="button" class="btn btn-fab btn-fab-mini">
+                                <i class="material-icons">add</i>
+                              </button>
+                            </router-link>
+                          </span>
+                        </div>
+                      </div>
+                      <datalist id="titles">
+                        <option v-for="media in allMedia" :key="media.id">
+                          {{ media.title }}
+                        </option>
+                      </datalist>
+                      <div class="form-group row">
+                        <label for="similarity" class="col-lg-2 control-label">Similarity</label>
+                        <div class="col-lg-9">
+                          <input
+                            type="number"
+                            class="form-control"
+                            id="similarity"
+                            placeholder="1"
+                            min="1"
+                            max="10"
+                            v-model="similarity"
+                          />
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <label for="enjoyability" class="col-lg-2 control-label">Enjoyability</label>
+                        <div class="col-lg-9">
+                          <input
+                            type="number"
+                            class="form-control"
+                            id="enjoyability"
+                            placeholder="1"
+                            min="1"
+                            max="10"
+                            v-model="enjoyability"
+                          />
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <label for="textArea" class="col-lg-2 control-label">Additional Thoughts</label>
+                        <div class="col-lg-9">
+                          <textarea
+                            class="form-control"
+                            rows="6"
+                            id="textArea"
+                            placeholder="Your comment..."
+                            v-model="commentText"
+                          ></textarea>
+                        </div>
+                      </div>
+                      <div class="form-group row justify-content-end">
+                        <div class="col-lg-10">
+                          <button type="submit" class="btn btn-raised btn-primary">Post Comment</button>
+                          <button type="button" v-on:click="commentShow = false" class="btn btn-danger">Cancel</button>
+                        </div>
+                      </div>
+                    </fieldset>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          <ul class="ms-timeline" v-for="comment in orderBy(media.comments, 'vote_total', -1)" :key="comment.id">
+            <li class="ms-timeline-item wow materialUp"></li>
+            <li class="ms-timeline-item wow materialUp mb-0">
+              <div class="ms-timeline-date">
+                <time class="timeline-time" datetime="">
+                  <span>{{ comment.user.username }}</span>
+                </time>
+                <i class="ms-timeline-point bg-primary"></i>
+                <router-link :to="`/users/${comment.user.id}`">
+                  <img
+                    :src="
+                      comment.user.profile_picture ? comment.user.profile_picture : require('../assets/default.jpeg')
+                    "
+                    class="ms-timeline-point-img"
+                  />
+                </router-link>
+              </div>
+              <div class="card card-primary">
+                <div class="card-body text-center">
+                  <h1 class="no-mt">
+                    <strong>
+                      Suggested Media
+                    </strong>
+                  </h1>
+                  <h2>{{ comment.suggested_media.title }}</h2>
+                  <img :src="comment.suggested_media.poster" alt="" class="img-fluid mb-4" />
+                  <div class="row">
+                    <div class="col-lg-6">
+                      <div class="card-body">
+                        <h3 class="color-primary">Info</h3>
+                        <ul class="list-unstyled">
+                          <li>
+                            <strong>Rated:</strong>
+                            {{ comment.suggested_media.rated }}
+                          </li>
+                          <li>
+                            <strong>IMDb Rating:</strong>
+                            {{ comment.suggested_media.imdb_rating }}
+                          </li>
+                          <li>
+                            <strong>Released:</strong>
+                            {{ comment.suggested_media.released }}
+                          </li>
+                          <li>
+                            <strong>Year:</strong>
+                            2014
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                    <div class="col-lg-6">
+                      <div class="card-body">
+                        <h3 class="color-primary">Plot Summary</h3>
+                        <p>
+                          {{ comment.suggested_media.plot }}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <button v-on:click="addSavedTrello(comment.suggested_media)" class="btn btn-primary btn-raised">
+                    <i class="zmdi zmdi-favorite-outline"></i>
+                    Save to watchlist
+                  </button>
+                </div>
+              </div>
+              <div class="row wow materialUp animation-delay-8">
+                <div class="col-md-12">
+                  <ul class="ms-timeline">
+                    <li class="ms-timeline-item wow materialUp">
+                      <div class="ms-timeline-date">
+                        <time class="timeline-time" datetime="">
+                          <h3><strong>Verdict</strong></h3>
+                        </time>
+                      </div>
+                      <div class="card card-primary text-center">
+                        <div class="row">
+                          <div class="col-lg-6">
+                            <div class="card-body">
+                              <h3 class="color-primary">User Comment</h3>
+                              <p>
+                                {{ comment.text }}
+                              </p>
+                            </div>
+                          </div>
+                          <div class="card-body">
+                            <div class="col-lg-6">
+                              <h3 class="color-primary">Rating</h3>
+                              <ul class="list-unstyled">
+                                <li>
+                                  <strong>Similarity:</strong>
+                                  {{ comment.similarity }}
+                                </li>
+                                <li>
+                                  <strong>Enjoyability:</strong>
+                                  {{ comment.enjoyability }}
+                                </li>
+                              </ul>
 
-    <br />
-    <br />
+                              <button
+                                v-on:click="addVote(comment, -1)"
+                                :disabled="comment.voted == -1"
+                                class="btn-circle"
+                                :class="comment.voted == -1 ? 'btn-circle-default' : 'btn-circle-primary'"
+                              >
+                                <i class="zmdi zmdi-thumb-down"></i>
+                              </button>
+                              {{ comment.vote_total }}
+                              <button
+                                v-on:click="addVote(comment, 1)"
+                                :disabled="comment.voted == 1"
+                                class="btn-circle"
+                                :class="comment.voted == 1 ? 'btn-circle-default' : 'btn-circle-primary'"
+                              >
+                                <i class="zmdi zmdi-thumb-up"></i>
+                              </button>
+                              <br />
+
+                              <small>Created {{ formatDate(comment.created_at) }}&nbsp;</small>
+                              <small v-if="comment.created_at != comment.updated_at">
+                                (edited {{ formatDate(comment.updated_at) }})
+                              </small>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- My code -->
 
     <!-- Comments section -->
     <div v-for="comment in orderBy(media.comments, 'vote_total', -1)" :key="comment.id" align="center">
@@ -253,35 +498,40 @@ export default {
       }
     },
     addVote: function(comment, value) {
-      if (!comment.voted) {
-        var params = {
-          comment_id: comment.id,
-          value: value,
-        };
-        axios
-          .post("/api/votes", params)
-          .then(response => {
-            console.log(response.data);
-            comment.vote_total += value;
-            comment.voted = value;
-            comment.votes.push(response.data);
-            console.log(comment.votes);
-          })
-          .catch(error => {
-            this.errors = [error.response];
-            console.log(this.errors);
-          });
-      } else if (comment.voted != value) {
-        params = {
-          value: value,
-        };
-        axios
-          .patch(`/api/votes/${comment.votes.find(vote => vote["user_id"] == this.$parent.userID()).id}`, params)
-          .then(response => {
-            console.log(response.data);
-            comment.vote_total += value + value;
-            comment.voted = value;
-          });
+      if (this.$parent.loggedIn()) {
+        if (!comment.voted) {
+          var params = {
+            comment_id: comment.id,
+            value: value,
+          };
+          axios
+            .post("/api/votes", params)
+            .then(response => {
+              console.log(response.data);
+              comment.vote_total += value;
+              comment.voted = value;
+              comment.votes.push(response.data);
+              console.log(comment.votes);
+            })
+            .catch(error => {
+              this.errors = [error.response];
+              console.log(this.errors);
+            });
+        } else if (comment.voted != value) {
+          params = {
+            value: value,
+          };
+          axios
+            .patch(`/api/votes/${comment.votes.find(vote => vote["user_id"] == this.$parent.userID()).id}`, params)
+            .then(response => {
+              console.log(response.data);
+              comment.vote_total += value + value;
+              comment.voted = value;
+            });
+        }
+      } else {
+        alert("Error: You must be logged in to vote on suggestions.");
+        console.log("Error: You must be logged in to vote on suggestions.");
       }
     },
     addSavedTrello: function(media) {

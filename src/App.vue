@@ -6,7 +6,7 @@
         <div class="ms-title">
           <a href="index.html">
             <!-- <img src="assets/img/demo/logo-header.png" alt=""> -->
-            <span class="ms-logo animated zoomInDown animation-delay-5">M</span>
+            <span class="ms-logo animated zoomInDown animation-delay-5"><i class="material-icons">tv_off</i></span>
             <h1 class="animated fadeInRight animation-delay-6">
               <span>It's Over,</span>
               Isn't It?
@@ -56,7 +56,7 @@
         <div class="navbar-header">
           <a class="navbar-brand" href="index.html">
             <!-- <img src="assets/img/demo/logo-navbar.png" alt=""> -->
-            <span class="ms-logo ms-logo-sm">I</span>
+            <span class="ms-logo ms-logo-sm"><i class="material-icons">tv_off</i></span>
             <span class="ms-title">
               <strong>It's Over,</strong>
               Isn't It?

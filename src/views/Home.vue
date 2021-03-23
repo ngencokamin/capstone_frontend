@@ -41,19 +41,21 @@
             <div class="col-lg-4 col-md-6" v-for="media in filterBy(media, filter)" :key="media.id">
               <div class="card width-auto">
                 <img :src="media.poster" alt="Poster for media" />
+                <small>
+                  <b>Rated {{ media.rated }} | Released: {{ media.released }}</b>
+                </small>
                 <div class="card-body overflow-hidden text-center">
-                  <a
-                    href="javascript:void(0)"
-                    class="btn-circle btn-circle-info btn-circle-raised btn-card-float right wow zoomInDown index-2"
-                  >
-                    <i class="zmdi zmdi-star"></i>
-                  </a>
                   <h4 class="color-info">{{ media.title }}</h4>
                   <p>
                     {{ media.plot }}
                   </p>
                   <p class="color-info">{{ media.comment_count }} comments</p>
-                  <router-link :to="`/media/${media.id}`"></router-link>
+                  <router-link :to="`/media/${media.id}`">
+                    <button class="btn btn-primary btn-raised">
+                      <i class="zmdi zmdi-globe"></i>
+                      View Comments
+                    </button>
+                  </router-link>
                 </div>
               </div>
             </div>
