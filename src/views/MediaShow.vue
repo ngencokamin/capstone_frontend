@@ -58,7 +58,6 @@
       <div class="row wow materialUp animation-delay-8">
         <div class="col-md-12">
           <h2 class="color-primary right-line">Comments</h2>
-
           <div class="row">
             <button
               class="btn btn-primary btn-raised mx-auto"
@@ -234,7 +233,7 @@
                         </time>
                       </div>
                       <div class="card card-primary text-center">
-                        <div class="row">
+                        <div class="row" v-if="comment.id != editCommentID">
                           <div class="col-lg-6">
                             <div class="card-body">
                               <h3 class="color-primary">User Comment</h3>
@@ -242,9 +241,18 @@
                                 {{ comment.text }}
                               </p>
                             </div>
+                            <button
+                              v-if="$parent.userID() == comment.user_id"
+                              v-on:click="editCommentID = comment.id"
+                              class="btn btn-primary btn-raised"
+                            >
+                              <i class="zmdi zmdi-edit"></i>
+                              Edit Comment
+                            </button>
                           </div>
-                          <div class="card-body">
-                            <div class="col-lg-6">
+
+                          <div class="col-lg-6">
+                            <div class="card-body">
                               <h3 class="color-primary">Rating</h3>
                               <ul class="list-unstyled">
                                 <li>
@@ -283,6 +291,66 @@
                             </div>
                           </div>
                         </div>
+                        <form class="form-horizontal" v-on:submit.prevent="updateComment(comment)" v-else>
+                          <fieldset class="container">
+                            <ul>
+                              <li class="text-danger" v-for="error in errors" v-bind:key="error.id">
+                                {{ error }}
+                              </li>
+                            </ul>
+                            <h3 class="color-primary">User Comment</h3>
+                            <div class="form-group row">
+                              <label for="textArea" class="col-lg-2 control-label">Comment</label>
+                              <div class="col-lg-9">
+                                <textarea
+                                  class="form-control"
+                                  rows="4"
+                                  id="textArea"
+                                  placeholder="Your comment..."
+                                  v-model="comment.text"
+                                ></textarea>
+                              </div>
+                            </div>
+                            <h3 class="color-primary">Rating</h3>
+                            <div class="form-group row">
+                              <label for="updateSimilarity" class="col-lg-2 control-label">similarity</label>
+                              <div class="col-lg-9">
+                                <input
+                                  type="number"
+                                  class="form-control"
+                                  id="updateSimilarity"
+                                  placeholder="1"
+                                  min="1"
+                                  max="10"
+                                  v-model="comment.similarity"
+                                />
+                              </div>
+                            </div>
+                            <div class="form-group row">
+                              <label for="updateEnjoyability" class="col-lg-2 control-label">Enjoyability</label>
+                              <div class="col-lg-9">
+                                <input
+                                  type="number"
+                                  class="form-control"
+                                  id="updateEnjoyability"
+                                  placeholder="1"
+                                  min="1"
+                                  max="10"
+                                  v-model="comment.enjoyability"
+                                />
+                              </div>
+                            </div>
+
+                            <div class="form-group row justify-content-end">
+                              <div class="col-lg-10">
+                                <button type="submit" class="btn btn-raised btn-primary">Post Comment</button>
+                                <button type="button" v-on:click="editCommentID = 0" class="btn btn-danger">
+                                  Cancel
+                                </button>
+                              </div>
+                            </div>
+                          </fieldset>
+                        </form>
                       </div>
                     </li>
                   </ul>

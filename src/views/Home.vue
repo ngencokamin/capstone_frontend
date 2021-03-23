@@ -37,10 +37,17 @@
       </datalist>
       <div class="row">
         <div class="col-md-12">
-          <div class="row text-center">
+          <div
+            class="row text-center"
+            is="transition-group"
+            appear
+            enter-active-class="animated fadeIn"
+            leave-active-class="animated fadeOut"
+          >
             <div class="col-lg-4 col-md-6" v-for="media in filterBy(media, filter)" :key="media.id">
               <div class="card width-auto">
                 <img :src="media.poster" alt="Poster for media" />
+                <br />
                 <small>
                   <b>Rated {{ media.rated }} | Released: {{ media.released }}</b>
                 </small>
@@ -64,7 +71,7 @@
       </div>
     </div>
     <!-- container -->
-    <div v-for="media in filterBy(media, filter)" :key="media.id">
+    <div v-for="media in filterBy(media, filter)" :key="media.id" class="animated fadeIn fadeOut animation-delay-2">
       <h2>{{ media.title }}</h2>
       <img :src="media.poster" alt="Poster for listed media" />
       <p>
