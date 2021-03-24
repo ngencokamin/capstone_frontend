@@ -59,7 +59,7 @@
                       title="Enabling Trello integration allows automatic syncing of watchlist data to a Trello board for added convenience"
                       type="button"
                       v-on:click="addTrello()"
-                      :disabled="trello == true"
+                      :disabled="trello"
                     >
                       <i class="fa fa-trello"></i>
                       Trello (Optional)
@@ -69,7 +69,7 @@
 
                 <div class="row ">
                   <div class="col-md-6">
-                    <button class="btn btn-raised btn-primary btn-block">
+                    <button class="btn btn-raised btn-primary btn-block" type="submit">
                       Sign Up
                       <i class="zmdi zmdi-long-arrow-right no-mr ml-1"></i>
                     </button>
@@ -96,46 +96,6 @@
       </div>
     </div>
   </div>
-  <!-- my code -->
-  <!-- <form v-on:submit.prevent="submit()">
-      <h2>
-        We would be honored if you would join us
-      </h2>
-      <ul>
-        <li class="text-danger" v-for="error in errors" v-bind:key="error">
-          {{ error }}
-        </li>
-      </ul>
-      <div class="form-group">
-        <label>Username:</label>
-        <input type="text" class="form-control" v-model="username" />
-      </div>
-      <div class="form-group">
-        <label>Email:</label>
-        <input type="email" class="form-control" v-model="email" />
-      </div>
-      <div class="form-group">
-        <label>Password:</label>
-        <input type="password" class="form-control" v-model="password" />
-      </div>
-      <div class="form-group">
-        <label>Password confirmation:</label>
-        <input type="password" class="form-control" v-model="passwordConfirmation" />
-      </div>
-      <div class="form-group">
-        <label>Would you like to enable profanity filter?</label>
-        <input type="checkbox" name="Profanity filter" v-model="profanityFilter" />
-        <label v-if="!profanityFilter">Off</label>
-        <label v-if="profanityFilter">On</label>
-      </div>
-      <div class="form-group">
-        <button v-on:click="addTrello()" type="button" :disabled="trello == true">
-          Add optional trello integration to watchlist
-        </button>
-      </div>
-      <input type="submit" class="btn btn-primary" value="Submit" />
-    </form>
-  </div> -->
 </template>
 
 <script>

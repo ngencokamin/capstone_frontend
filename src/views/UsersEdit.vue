@@ -5,7 +5,8 @@
         {{ error }}
       </li>
     </ul>
-    <form v-on:submit.prevent="updateUser()">
+    <!-- <form v-on:submit.prevent="updateUser()"> -->
+    <form>
       <h1>Edit Profile</h1>
 
       <div class="form-group">

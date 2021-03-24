@@ -26,14 +26,116 @@
               </div>
             </div>
             <div class="col-lg-12 col-md-12 order-md-3 order-lg-2">
-              <a
-                href="javascript:void(0)"
+              <button
+                data-toggle="modal"
+                data-target="#editModal"
                 class="btn btn-warning btn-raised btn-block animated fadeInUp animation-delay-12"
                 v-if="user.id == this.$parent.userID()"
               >
                 <i class="zmdi zmdi-edit"></i>
                 Edit Profile
-              </a>
+              </button>
+              <div class="modal" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel">
+                <div class="modal-dialog modal-lg animated zoomIn animated-3x" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h3 class="modal-title color-primary" id="editModalLabel">Edit Profile</h3>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true"><i class="zmdi zmdi-close"></i></span>
+                      </button>
+                    </div>
+                    <form class="form-horizontal" v-on:submit.prevent="updateUser">
+                      <fieldset class="container">
+                        <div class="modal-body">
+                          <ul>
+                            <li class="text-danger" v-for="error in errors" v-bind:key="error.id">
+                              {{ error }}
+                            </li>
+                          </ul>
+                          <div class="form-group label-floating">
+                            <input class="form-control" type="file" v-on:change="setFile($event)" ref="fileInput" />
+                            <div class="input-group">
+                              <img
+                                :src="user.profile_picture ? user.profile_picture : require('../assets/default.jpeg')"
+                                alt="User profile photo"
+                                class="img-avatar-circle "
+                                id="editProfilePhoto"
+                              />
+                            </div>
+                          </div>
+                          <br />
+                          <h3 class="text-center">Click to change profile photo</h3>
+                          <div class="form-group label-floating">
+                            <div class="input-group">
+                              <span class="input-group-addon"><i class="zmdi zmdi-email"></i></span>
+                              <label class="control-label" for="ms-form-email">Email</label>
+                              <input type="text" id="ms-form-email" class="form-control" v-model="user.email" />
+                            </div>
+                          </div>
+                          <div class="form-group label-floating">
+                            <div class="input-group">
+                              <span class="input-group-addon"><i class="zmdi zmdi-account"></i></span>
+                              <label class="control-label" for="ms-form-username">Username</label>
+                              <input type="text" id="ms-form-username" class="form-control" v-model="user.username" />
+                            </div>
+                          </div>
+                          <div class="form-group label-floating">
+                            <div class="input-group">
+                              <div class="checkbox ">
+                                <label>
+                                  <input
+                                    type="checkbox"
+                                    autocomplete="off"
+                                    v-model="user.profanity_filter"
+                                    class="custom-control-input"
+                                  />
+                                  Enable profanity filter?
+                                </label>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="form-group label-floating">
+                            <div class="input-group text-center" v-if="!user.trello">
+                              <button
+                                class="btn btn-raised btn-linkedin"
+                                data-toggle="tooltip"
+                                data-placement="top"
+                                title="Enabling Trello integration allows automatic syncing of watchlist data to a Trello board for added convenience"
+                                type="button"
+                                v-on:click="addTrello()"
+                                :disabled="trello"
+                              >
+                                <i class="fa fa-trello"></i>
+                                Add Trello
+                              </button>
+                            </div>
+                            <div class="input-group text-center" v-else>
+                              <button
+                                class="btn btn-raised btn-danger"
+                                data-toggle="tooltip"
+                                data-placement="top"
+                                title="Removing Trello integration will delete your &quot;It's Over, Isn't It&quot; board on Trello."
+                                type="button"
+                                v-on:click="removeTrello()"
+                                :disabled="!trello"
+                              >
+                                <i class="fa fa-trello"></i>
+                                Remove Trello
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                          <button type="submit" class="btn btn-raised btn-primary" data-dismiss="modal">
+                            Save changes
+                          </button>
+                        </div>
+                      </fieldset>
+                    </form>
+                  </div>
+                </div>
+              </div>
               <router-link
                 :to="`/watchlist/${user.id}`"
                 class="btn btn-warning btn-raised btn-block animated fadeInUp animation-delay-12"
@@ -204,6 +306,12 @@ export default {
   data: function() {
     return {
       user: "",
+      errors: [],
+      showFavorite: false,
+      allMedia: [],
+      favoriteMedia: "",
+      trelloListID: "",
+      trello: this.$parent.trelloListID(),
     };
   },
   created: function() {
@@ -231,6 +339,179 @@ export default {
     formatDate(date) {
       // return moment(date).fromNow();
       return [moment(date).format("MMMM Do"), moment(date).format("YYYY")];
+    },
+    // Edit
+    findMedia: function(media) {
+      return media.title === this.favoriteMedia;
+    },
+    addFavorite() {
+      axios.get("/api/media").then(response => {
+        this.allMedia = response.data;
+        console.log(response.data);
+        this.showFavorite = true;
+      });
+    },
+    setFile: function(event) {
+      if (event.target.files.length > 0) {
+        this.image = event.target.files[0];
+      }
+    },
+    updateUser: function() {
+      var formData = new FormData();
+      formData.append("email", this.user.email);
+      formData.append("username", this.user.username);
+      if (this.user.bio) {
+        formData.append("bio", this.user.bio);
+      } else {
+        formData.append("bio", "");
+      }
+      if (this.image) {
+        formData.append("profile_picture", this.image);
+      }
+      formData.append("profanity_filter", this.user.profanity_filter);
+      if (this.showFavorite) {
+        if (this.allMedia.find(this.findMedia)) {
+          formData.append("favorite_media_id", this.allMedia.find(this.findMedia).id);
+        } else if (!this.allMedia.find(this.findMedia)) {
+          this.errors = [
+            "ERROR! Show not found. Please click the 'Add New Show' button to add it, or choose a different show.",
+          ];
+          return;
+        }
+      }
+      axios
+        .patch(`/api/users/me`, formData)
+        .then(response => {
+          console.log(response.data);
+          this.$router.push(`/users/${this.user.id}`);
+        })
+        .catch(error => {
+          this.errors = error.response.data.errors;
+        });
+    },
+    destroyUser: function() {
+      if (confirm("Are you sure you want to delete your account? This will also remove any comments you have made.")) {
+        axios
+          .delete(`/api/users/me`)
+          .then(response => {
+            console.log(response.data.message);
+            alert(response.data.message);
+            localStorage.removeItem("jwt");
+            localStorage.removeItem("user_id");
+            this.$router.push("/");
+            if (this.$parent.trelloListID()) {
+              var deleteSuccess = function(data) {
+                localStorage.removeItem("trello_token");
+                localStorage.removeItem("trelloListID");
+                console.log(data);
+              };
+              var getIDSuccess = function(data) {
+                console.log(data.idBoard);
+                window.Trello.del(`/boards/${data.idBoard}`, deleteSuccess);
+              };
+              window.Trello.authorize({ interactive: false });
+              window.Trello.lists.get(this.$parent.trelloListID(), getIDSuccess);
+            }
+          })
+          .catch(error => {
+            this.errors = error.response.data.errors;
+            alert("Error! Couldn't delete user");
+          });
+      }
+    },
+    addTrello: function() {
+      if (!this.$parent.trelloListID()) {
+        var completeCreationSuccess = function(data) {
+          console.log("List created successfully.");
+          console.log(data.id);
+          this.trelloListID = data.id;
+          this.trello = true;
+          localStorage.setItem("trelloListID", this.trelloListID);
+          alert("Trello integration successfully added.");
+          var params = {
+            trello_list_id: this.trelloListID,
+          };
+          axios.patch("/api/users/me", params).then(response => {
+            console.log(response.data);
+          });
+          axios.get(`/api/saved_shows/${this.user.id}`).then(response => {
+            console.log(response.data);
+            response.data.forEach(savedShow => {
+              console.log(savedShow);
+              var creationSuccess = function(data) {
+                console.log(data.id);
+                console.log("Card created successfully.");
+                var params = {
+                  trello_id: data.id,
+                };
+                axios.patch(`/api/saved_shows/${savedShow.info.id}`, params).then(response => {
+                  console.log(response.data);
+                });
+              }.bind(this);
+              var newCard = {
+                name: savedShow.title,
+                desc: `![](${savedShow.poster})\n${savedShow.plot}`,
+                idList: this.$parent.trelloListID(),
+                pos: "top",
+              };
+              window.Trello.post("/cards/", newCard, creationSuccess);
+            });
+          });
+        }.bind(this);
+
+        var boardCreationSuccess = function(data) {
+          console.log("Board created successfully.");
+          var boardID = data.id;
+          console.log(boardID);
+          var newList = {
+            name: "Watchlist",
+            idBoard: boardID,
+          };
+          window.Trello.post("/lists/", newList, completeCreationSuccess);
+        };
+        var authenticationSuccess = function() {
+          console.log("Successful authentication");
+          var newBoard = {
+            name: "It's Over, Isn't It?",
+            defaultLists: false,
+            desc: "Pretty please don't delete this! Things will break!",
+          };
+          window.Trello.post("/boards/", newBoard, boardCreationSuccess);
+        };
+
+        var authenticationFailure = function() {
+          console.log("Failed authentication");
+        };
+        window.Trello.authorize({
+          type: "popup",
+          name: "It's Over, Isn't It?",
+          scope: {
+            read: "true",
+            write: "true",
+          },
+          expiration: "never",
+          success: authenticationSuccess,
+          error: authenticationFailure,
+        });
+      }
+    },
+    removeTrello: function() {
+      var deleteSuccess = function(data) {
+        console.log(data);
+        axios.delete("/api/users/me/trello").then(response => {
+          console.log(response.data);
+          localStorage.removeItem("trelloListID");
+          localStorage.removeItem("trello_token");
+          this.trello = false;
+          alert("Trello integration successfully removed.");
+        });
+      }.bind(this);
+      var getIDSuccess = function(data) {
+        console.log(data.idBoard);
+        window.Trello.del(`/boards/${data.idBoard}`, deleteSuccess);
+      };
+      window.Trello.authorize({ interactive: false });
+      window.Trello.lists.get(this.$parent.trelloListID(), getIDSuccess);
     },
   },
 };
