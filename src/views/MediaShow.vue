@@ -87,6 +87,7 @@
                             list="titles"
                             v-model="suggestedMedia"
                             placeholder="Type to search..."
+                            autocomplete="off"
                           />
                           <span class="input-group-btn">
                             <router-link :to="{ path: '/media/new', query: { search: suggestedMedia } }">

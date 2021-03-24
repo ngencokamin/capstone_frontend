@@ -20,7 +20,7 @@
       <div class="form-group label-floating">
         <label class="control-label" for="addon2">Find or add a show</label>
         <div class="input-group">
-          <input type="text" id="addon2" class="form-control" list="titles" v-model="filter" />
+          <input type="text" id="addon2" class="form-control" list="titles" v-model="filter" autocomplete="off"/>
           <span class="input-group-btn">
             <router-link :to="{ path: '/media/new', query: { search: filter } }">
               <button type="button" class="btn btn-fab btn-fab-mini">

@@ -44,7 +44,7 @@
                         <span aria-hidden="true"><i class="zmdi zmdi-close"></i></span>
                       </button>
                     </div>
-                    <form class="form-horizontal" v-on:submit.prevent="updateUser">
+                    <form class="form-horizontal" v-on:submit.prevent="updateUser()">
                       <fieldset class="container">
                         <div class="modal-body">
                           <ul>
@@ -79,19 +79,48 @@
                               <input type="text" id="ms-form-username" class="form-control" v-model="user.username" />
                             </div>
                           </div>
-                          <div class="form-group label-floating">
+                          <div class="form-group label-floating" v-if="showFavorite">
                             <div class="input-group">
-                              <div class="checkbox ">
-                                <label>
-                                  <input type="checkbox" autocomplete="off" v-model="user.profanity_filter" />
-                                  <span class="checkbox-material"><span class="check"></span></span>
-                                  Enable profanity filter?
-                                </label>
-                              </div>
+                              <label class="control-label" for="addon2">Find a show</label>
+                              <input
+                                type="text"
+                                id="addon2"
+                                class="form-control"
+                                list="titles"
+                                v-model="favoriteMedia"
+                                autocomplete="off"
+                              />
+                            </div>
+                            <datalist id="titles">
+                              <option v-for="media in allMedia" :key="media.id">
+                                {{ media.title }}
+                              </option>
+                            </datalist>
+                          </div>
+                          <div class="form-group label-floating" v-if="!showFavorite">
+                            <div class="input-group">
+                              <button
+                                class="btn btn-raised btn-primary"
+                                v-on:click="addFavorite()"
+                                type="button"
+                                v-if="!user.favorite_media"
+                              >
+                                <i class="zmdi zmdi-play"></i>
+                                Add Favorite Show
+                              </button>
+                              <button
+                                class="btn btn-raised btn-primary"
+                                v-on:click="addFavorite()"
+                                type="button"
+                                v-else
+                              >
+                                <i class="zmdi zmdi-play"></i>
+                                Add Favorite Show
+                              </button>
                             </div>
                           </div>
                           <div class="form-group label-floating">
-                            <div class="input-group text-center" v-if="!user.trello">
+                            <div class="input-group" v-if="!user.trello">
                               <button
                                 class="btn btn-raised btn-linkedin"
                                 data-toggle="tooltip"
@@ -105,7 +134,7 @@
                                 Add Trello
                               </button>
                             </div>
-                            <div class="input-group text-center" v-else>
+                            <div class="input-group" v-else>
                               <button
                                 class="btn btn-raised btn-danger"
                                 data-toggle="tooltip"
@@ -120,10 +149,21 @@
                               </button>
                             </div>
                           </div>
+                          <div class="form-group label-floating">
+                            <div class="input-group">
+                              <div class="checkbox ">
+                                <label>
+                                  <input type="checkbox" autocomplete="off" v-model="user.profanity_filter" />
+                                  <span class="checkbox-material"><span class="check"></span></span>
+                                  Enable profanity filter?
+                                </label>
+                              </div>
+                            </div>
+                          </div>
                         </div>
                         <div class="modal-footer">
                           <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                          <button type="submit" class="btn btn-raised btn-primary">
+                          <button type="submit" class="btn btn-raised btn-primary" value="Update">
                             Save changes
                           </button>
                         </div>
@@ -134,7 +174,7 @@
               </div>
               <router-link
                 :to="`/watchlist/${user.id}`"
-                class="btn btn-warning btn-raised btn-block animated fadeInUp animation-delay-12"
+                class="btn btn-primary btn-raised btn-block animated fadeInUp animation-delay-12"
               >
                 <i class="zmdi zmdi-tv"></i>
                 {{ user.username }}'s Watchlist'
@@ -362,7 +402,6 @@ export default {
       }
     },
     updateUser: function() {
-      $(".modal.in").modal("hide");
       var formData = new FormData();
       formData.append("email", this.user.email);
       formData.append("username", this.user.username);
@@ -380,7 +419,7 @@ export default {
           formData.append("favorite_media_id", this.allMedia.find(this.findMedia).id);
         } else if (!this.allMedia.find(this.findMedia)) {
           this.errors = [
-            "ERROR! Show not found. Please click the 'Add New Show' button to add it, or choose a different show.",
+            "Show not found. Please click the 'Add New Show' button to add it, or choose a different show.",
           ];
           return;
         }
@@ -388,10 +427,15 @@ export default {
       axios
         .patch(`/api/users/me`, formData)
         .then(response => {
+          console.log("yeehaw");
           console.log(response.data);
-          this.$router.push(`/users/${this.user.id}`);
+          this.showFavorite = false;
+          $("#editModal").modal("hide");
+          // this.$router.push(`/users/${this.user.id}`);
         })
         .catch(error => {
+          console.log("It did a break");
+          console.log(error.response.data.errors);
           this.errors = error.response.data.errors;
         });
     },

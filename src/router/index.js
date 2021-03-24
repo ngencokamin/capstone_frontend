@@ -7,7 +7,6 @@ import Logout from "../views/Logout.vue";
 import MediaShow from "../views/MediaShow.vue";
 import MediaNew from "../views/MediaNew.vue";
 import UsersShow from "../views/UsersShow.vue";
-import UsersEdit from "../views/UsersEdit.vue";
 import SavedShows from "../views/SavedShows.vue";
 
 
@@ -25,7 +24,6 @@ const routes = [
   { path: "/logout", name: "logout", component: Logout },
   { path: "/media/new", name: "media-new", component: MediaNew },
   { path: "/media/:id", name: "media-show", component: MediaShow },
-  { path: "/users/me/edit", name: "users-edit", component: UsersEdit },
   { path: "/users/:id", name: "users-show", component: UsersShow },
   { path: "/watchlist/:user_id", name: "saved-shows", component: SavedShows },
   
