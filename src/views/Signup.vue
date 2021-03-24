@@ -45,6 +45,7 @@
                     <div class="checkbox ">
                       <label>
                         <input type="checkbox" v-model="profanityFilter" />
+                        <span class="checkbox-material"><span class="check"></span></span>
                         Enable profanity filter?
                       </label>
                     </div>

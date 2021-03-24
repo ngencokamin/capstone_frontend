@@ -19,9 +19,9 @@
             </li>
 
             <li class="nav-item" v-if="!loggedIn()">
-              <a class="nav-link animated fadeIn animation-delay-7" role="button" href="/signup">
+              <router-link class="nav-link animated fadeIn animation-delay-7" role="button" to="/signup">
                 Signup
-              </a>
+              </router-link>
             </li>
             <li class="nav-item" v-if="!loggedIn()">
               <router-link class="nav-link animated fadeIn animation-delay-7" role="button" to="/login">
@@ -29,14 +29,18 @@
               </router-link>
             </li>
             <li class="nav-item" v-if="loggedIn()">
-              <a class="nav-link animated fadeIn animation-delay-7" role="button" :href="`/users/${userID()}`">
+              <router-link class="nav-link animated fadeIn animation-delay-7" role="button" :to="`/users/${userID()}`">
                 Profile
-              </a>
+              </router-link>
             </li>
             <li class="nav-item" v-if="loggedIn()">
-              <a class="nav-link animated fadeIn animation-delay-7" role="button" :href="`/watchlist/${userID()}`">
+              <router-link
+                class="nav-link animated fadeIn animation-delay-7"
+                role="button"
+                :to="`/watchlist/${userID()}`"
+              >
                 My Watchlist
-              </a>
+              </router-link>
             </li>
             <li class="nav-item" v-if="loggedIn()">
               <router-link class="nav-link animated fadeIn animation-delay-7" role="button" to="/logout">
@@ -50,7 +54,7 @@
       <!-- container -->
     </nav>
 
-    <router-view />
+    <router-view :key="$route.fullPath" />
     <!-- <footer class="ms-footer ">
       <div class="container">
         <p>Copyright &copy; Material Style 2017</p>

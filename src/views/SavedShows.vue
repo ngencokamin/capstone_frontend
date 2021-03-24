@@ -33,11 +33,11 @@
       <div class="form-group label-floating" v-if="saved.length > 0">
         <label class="control-label" for="addon2">Find a show</label>
         <div class="input-group">
-          <input type="text" id="addon2" class="form-control" list="titles" v-model="filter" />
+          <input type="text" id="addon2" class="form-control" list="titles" v-model="filter" autocomplete="off" />
         </div>
       </div>
       <datalist id="titles">
-        <option v-for="media in media" :key="media.id">
+        <option v-for="media in saved" :key="media.id">
           {{ media.title }}
         </option>
       </datalist>

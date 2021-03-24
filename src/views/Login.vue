@@ -34,12 +34,12 @@
                     </button>
                   </div>
                   <div class="col-md-6">
-                    <a href="/signup">
+                    <router-link to="/signup">
                       <button class="btn btn-primary btn-block" type="button">
                         <i class="zmdi zmdi-account-add mr-1"></i>
                         Sign Up
                       </button>
-                    </a>
+                    </router-link>
                   </div>
                 </div>
               </fieldset>

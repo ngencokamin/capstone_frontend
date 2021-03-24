@@ -83,12 +83,8 @@
                             <div class="input-group">
                               <div class="checkbox ">
                                 <label>
-                                  <input
-                                    type="checkbox"
-                                    autocomplete="off"
-                                    v-model="user.profanity_filter"
-                                    class="custom-control-input"
-                                  />
+                                  <input type="checkbox" autocomplete="off" v-model="user.profanity_filter" />
+                                  <span class="checkbox-material"><span class="check"></span></span>
                                   Enable profanity filter?
                                 </label>
                               </div>
@@ -127,7 +123,7 @@
                         </div>
                         <div class="modal-footer">
                           <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                          <button type="submit" class="btn btn-raised btn-primary" data-dismiss="modal">
+                          <button type="submit" class="btn btn-raised btn-primary">
                             Save changes
                           </button>
                         </div>
@@ -144,12 +140,12 @@
                 {{ user.username }}'s Watchlist'
               </router-link>
             </div>
-            <div class="col-lg-12 col-md-6 order-md-2 order-lg-3" v-if="user.favorite_media">
+            <div class="col-lg-12 col-md-6 order-md-2 order-lg-3">
               <div class="card animated fadeInUp animation-delay-12">
                 <div class="ms-hero-bg-info ms-hero-img-mountain">
                   <h3 class="color-white index-1 text-center pb-4 pt-4">Favorite Show</h3>
                 </div>
-                <div class="card-body text-center">
+                <div class="card-body text-center" v-if="user.favorite_media">
                   <img :src="user.favorite_media.poster" alt="Poster for user.favorite_media" />
                   <br />
                   <small>
@@ -169,6 +165,14 @@
                         View Comments
                       </button>
                     </router-link>
+                  </div>
+                </div>
+                <div class="card-body text-center" v-else>
+                  <div class="card-body overflow-hidden text-center">
+                    <h2 class="color-info">No favorite show found</h2>
+                    <p>
+                      <i>I have failed you Anakin. I have failed you.</i>
+                    </p>
                   </div>
                 </div>
               </div>
@@ -301,6 +305,7 @@
 import axios from "axios";
 import moment from "moment";
 import Vue2Filters from "vue2-filters";
+import $ from "jquery";
 export default {
   mixins: [Vue2Filters.mixin],
   data: function() {
@@ -357,6 +362,7 @@ export default {
       }
     },
     updateUser: function() {
+      $(".modal.in").modal("hide");
       var formData = new FormData();
       formData.append("email", this.user.email);
       formData.append("username", this.user.username);
