@@ -1,16 +1,16 @@
 <template>
   <div id="app">
-    <nav class="navbar navbar-expand-md navbar-static ms-navbar ms-navbar-primary navbar-mode">
+    <nav class="navbar navbar-expand-md navbar-static ms-navbar ms-navbar-primary navbar-mode navbar-right">
       <div class="container container-full">
         <div class="navbar-header">
-          <a class="navbar-brand" href="index.html">
+          <router-link class="navbar-brand" to="/">
             <!-- <img src="assets/img/demo/logo-navbar.png" alt=""> -->
             <span class="ms-logo ms-logo-sm"><i class="material-icons">tv_off</i></span>
             <span class="ms-title">
               <strong>It's Over,</strong>
               Isn't It?
             </span>
-          </a>
+          </router-link>
         </div>
         <div class="collapse navbar-collapse" id="ms-navbar">
           <ul class="navbar-nav">
@@ -19,9 +19,9 @@
             </li>
 
             <li class="nav-item" v-if="!loggedIn()">
-              <router-link class="nav-link animated fadeIn animation-delay-7" role="button" to="/signup">
+              <a class="nav-link animated fadeIn animation-delay-7" role="button" href="/signup">
                 Signup
-              </router-link>
+              </a>
             </li>
             <li class="nav-item" v-if="!loggedIn()">
               <router-link class="nav-link animated fadeIn animation-delay-7" role="button" to="/login">
@@ -51,11 +51,11 @@
     </nav>
 
     <router-view />
-    <footer class="ms-footer">
+    <!-- <footer class="ms-footer ">
       <div class="container">
         <p>Copyright &copy; Material Style 2017</p>
       </div>
-    </footer>
+    </footer> -->
   </div>
 </template>
 

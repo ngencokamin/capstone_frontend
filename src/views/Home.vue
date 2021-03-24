@@ -52,7 +52,7 @@
                   <b>Rated {{ media.rated }} | Released: {{ media.released }}</b>
                 </small>
                 <div class="card-body overflow-hidden text-center">
-                  <h4 class="color-info">{{ media.title }}</h4>
+                  <h2 class="color-primary">{{ media.title }}</h2>
                   <p>
                     {{ media.plot }}
                   </p>
@@ -69,16 +69,6 @@
           </div>
         </div>
       </div>
-    </div>
-    <!-- container -->
-    <div v-for="media in filterBy(media, filter)" :key="media.id" class="animated fadeIn fadeOut animation-delay-2">
-      <h2>{{ media.title }}</h2>
-      <img :src="media.poster" alt="Poster for listed media" />
-      <p>
-        <b>Rated {{ media.rated }} | Released: {{ media.released }}</b>
-      </p>
-      <p>{{ media.comment_count }} comments</p>
-      <router-link :to="`/media/${media.id}`"><button>More Info</button></router-link>
     </div>
   </div>
 </template>

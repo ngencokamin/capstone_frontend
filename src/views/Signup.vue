@@ -40,14 +40,6 @@
                     <input type="password" id="ms-form-pass-conf" class="form-control" v-model="passwordConfirmation" />
                   </div>
                 </div>
-                <!-- <div class="form-group label-floating">
-                  <div class="input-group">
-                    <label>Would you like to enable profanity filter?</label>
-                    <input id="profanityFilter" type="checkbox" name="Profanity filter" v-model="profanityFilter" />
-                    <label v-if="!profanityFilter">Off</label>
-                    <label v-if="profanityFilter">On</label>
-                  </div>
-                </div> -->
                 <div class="form-group label-floating">
                   <div class="input-group">
                     <div class="checkbox ">
