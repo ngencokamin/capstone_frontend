@@ -19,10 +19,31 @@
 - Users can add shows to an in-site watchlist
 - Optional Trello integration to sync users' watchlists with a Trello board
 
-## Todo
+## Screenshots
 
-- Add theme to site
-- Add screenshots to README
+<figure style="width: 80%;">
+  <figcaption align="center"><b>Home Page</b></figcaption>
+  <img src="public/assets/img/screenshot_homepage.png"
+  alt="Home page." >
+</figure>
+
+<figure style="width: 80%;">
+  <figcaption align="center"><b>New comment form and pre-existing comment on media</b></figcaption>
+  <img src="public/assets/img/screenshot_comment.png"
+  alt="Screenshot of new comment form and existing comment" >
+</figure>
+
+<figure style="width: 80%;">
+  <figcaption align="center"><b>User Profile with comments</b></figcaption>
+  <img src="public/assets/img/screenshot_profile.png"
+  alt="Profile page" >
+</figure>
+
+<figure style="width: 80%;">
+  <figcaption align="center"><b>Profile Edit modal with Trello and profanity filter</b></figcaption>
+  <img src="public/assets/img/screenshot_profile_edit.png"
+  alt="Home page." >
+</figure>
 
 ## Frontend Routes
 

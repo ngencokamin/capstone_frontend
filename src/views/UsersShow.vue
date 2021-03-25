@@ -26,6 +26,13 @@
               </div>
             </div>
             <div class="col-lg-12 col-md-12 order-md-3 order-lg-2">
+              <router-link
+                :to="`/watchlist/${user.id}`"
+                class="btn btn-primary btn-raised btn-block animated fadeInUp animation-delay-12"
+              >
+                <i class="zmdi zmdi-tv"></i>
+                {{ user.username }}'s Watchlist
+              </router-link>
               <button
                 data-toggle="modal"
                 data-target="#editModal"
@@ -35,150 +42,14 @@
                 <i class="zmdi zmdi-edit"></i>
                 Edit Profile
               </button>
-              <div class="modal" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel">
-                <div class="modal-dialog modal-lg animated zoomIn animated-3x" role="document">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h3 class="modal-title color-primary" id="editModalLabel">Edit Profile</h3>
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true"><i class="zmdi zmdi-close"></i></span>
-                      </button>
-                    </div>
-                    <form class="form-horizontal" v-on:submit.prevent="updateUser()">
-                      <fieldset class="container">
-                        <div class="modal-body">
-                          <ul>
-                            <li class="text-danger" v-for="error in errors" v-bind:key="error.id">
-                              {{ error }}
-                            </li>
-                          </ul>
-                          <div class="form-group label-floating">
-                            <input class="form-control" type="file" v-on:change="setFile($event)" ref="fileInput" />
-                            <div class="input-group">
-                              <img
-                                :src="user.profile_picture ? user.profile_picture : require('../assets/default.jpeg')"
-                                alt="User profile photo"
-                                class="img-avatar-circle "
-                                id="editProfilePhoto"
-                              />
-                            </div>
-                          </div>
-                          <br />
-                          <h3 class="text-center">Click to change profile photo</h3>
-                          <div class="form-group label-floating">
-                            <div class="input-group">
-                              <span class="input-group-addon"><i class="zmdi zmdi-email"></i></span>
-                              <label class="control-label" for="ms-form-email">Email</label>
-                              <input type="text" id="ms-form-email" class="form-control" v-model="user.email" />
-                            </div>
-                          </div>
-                          <div class="form-group label-floating">
-                            <div class="input-group">
-                              <span class="input-group-addon"><i class="zmdi zmdi-account"></i></span>
-                              <label class="control-label" for="ms-form-username">Username</label>
-                              <input type="text" id="ms-form-username" class="form-control" v-model="user.username" />
-                            </div>
-                          </div>
-                          <div class="form-group label-floating" v-if="showFavorite">
-                            <div class="input-group">
-                              <label class="control-label" for="addon2">Find a show</label>
-                              <input
-                                type="text"
-                                id="addon2"
-                                class="form-control"
-                                list="titles"
-                                v-model="favoriteMedia"
-                                autocomplete="off"
-                              />
-                            </div>
-                            <datalist id="titles">
-                              <option v-for="media in allMedia" :key="media.id">
-                                {{ media.title }}
-                              </option>
-                            </datalist>
-                          </div>
-                          <div class="form-group label-floating" v-if="!showFavorite">
-                            <div class="input-group">
-                              <button
-                                class="btn btn-raised btn-primary"
-                                v-on:click="addFavorite()"
-                                type="button"
-                                v-if="!user.favorite_media"
-                              >
-                                <i class="zmdi zmdi-play"></i>
-                                Add Favorite Show
-                              </button>
-                              <button
-                                class="btn btn-raised btn-primary"
-                                v-on:click="addFavorite()"
-                                type="button"
-                                v-else
-                              >
-                                <i class="zmdi zmdi-play"></i>
-                                Add Favorite Show
-                              </button>
-                            </div>
-                          </div>
-                          <div class="form-group label-floating">
-                            <div class="input-group" v-if="!user.trello">
-                              <button
-                                class="btn btn-raised btn-linkedin"
-                                data-toggle="tooltip"
-                                data-placement="top"
-                                title="Enabling Trello integration allows automatic syncing of watchlist data to a Trello board for added convenience"
-                                type="button"
-                                v-on:click="addTrello()"
-                                :disabled="trello"
-                              >
-                                <i class="fa fa-trello"></i>
-                                Add Trello
-                              </button>
-                            </div>
-                            <div class="input-group" v-else>
-                              <button
-                                class="btn btn-raised btn-danger"
-                                data-toggle="tooltip"
-                                data-placement="top"
-                                title="Removing Trello integration will delete your &quot;It's Over, Isn't It&quot; board on Trello."
-                                type="button"
-                                v-on:click="removeTrello()"
-                                :disabled="!trello"
-                              >
-                                <i class="fa fa-trello"></i>
-                                Remove Trello
-                              </button>
-                            </div>
-                          </div>
-                          <div class="form-group label-floating">
-                            <div class="input-group">
-                              <div class="checkbox ">
-                                <label>
-                                  <input type="checkbox" autocomplete="off" v-model="user.profanity_filter" />
-                                  <span class="checkbox-material"><span class="check"></span></span>
-                                  Enable profanity filter?
-                                </label>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="modal-footer">
-                          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                          <button type="submit" class="btn btn-raised btn-primary" value="Update">
-                            Save changes
-                          </button>
-                        </div>
-                      </fieldset>
-                    </form>
-                  </div>
-                </div>
-              </div>
-              <router-link
-                :to="`/watchlist/${user.id}`"
-                class="btn btn-primary btn-raised btn-block animated fadeInUp animation-delay-12"
+              <button
+                v-on:click="destroyUser()"
+                class="btn btn-danger btn-raised btn-block animated fadeInUp animation-delay-12"
+                v-if="user.id == this.$parent.userID()"
               >
-                <i class="zmdi zmdi-tv"></i>
-                {{ user.username }}'s Watchlist'
-              </router-link>
+                <i class="zmdi zmdi-delete"></i>
+                Delete Account
+              </button>
             </div>
             <div class="col-lg-12 col-md-6 order-md-2 order-lg-3">
               <div class="card animated fadeInUp animation-delay-12">
@@ -323,6 +194,16 @@
                             </ul>
                           </div>
                         </div>
+                        <div class="card-body text-center">
+                          <button
+                            v-if="$parent.userID() == comment.user_id"
+                            v-on:click="destroyComment(comment)"
+                            class="btn btn-danger btn-raised"
+                          >
+                            <i class="zmdi zmdi-delete"></i>
+                            Delete
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -333,9 +214,150 @@
         </div>
       </div>
     </div>
-    <!-- container -->
-
-    <!-- My code -->
+    <div class="modal" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel">
+      <div class="modal-dialog modal-lg animated zoomIn animated-3x" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3 class="modal-title color-primary" id="editModalLabel">Edit Profile</h3>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true"><i class="zmdi zmdi-close"></i></span>
+            </button>
+          </div>
+          <form class="form-horizontal" v-on:submit.prevent="updateUser()">
+            <fieldset class="container">
+              <div class="modal-body">
+                <ul>
+                  <li class="text-danger" v-for="error in errors" v-bind:key="error.id">
+                    {{ error }}
+                  </li>
+                </ul>
+                <div class="form-group label-floating">
+                  <input class="form-control" type="file" v-on:change="setFile($event)" ref="fileInput" />
+                  <div class="input-group">
+                    <img
+                      :src="user.profile_picture ? user.profile_picture : require('../assets/default.jpeg')"
+                      alt="User profile photo"
+                      class="img-avatar-circle "
+                      id="editProfilePhoto"
+                    />
+                  </div>
+                </div>
+                <br />
+                <h3 class="text-center">Click to change profile photo</h3>
+                <div class="form-group label-floating">
+                  <div class="input-group">
+                    <span class="input-group-addon"><i class="zmdi zmdi-email"></i></span>
+                    <label class="control-label" for="ms-form-email">Email</label>
+                    <input type="text" id="ms-form-email" class="form-control" v-model="user.email" />
+                  </div>
+                </div>
+                <div class="form-group label-floating">
+                  <div class="input-group">
+                    <span class="input-group-addon"><i class="zmdi zmdi-account"></i></span>
+                    <label class="control-label" for="ms-form-username">Username</label>
+                    <input type="text" id="ms-form-username" class="form-control" v-model="user.username" />
+                  </div>
+                </div>
+                <div class="form-group label-floating">
+                  <div class="input-group">
+                    <label class="control-label" for="ms-form-bio">bio</label>
+                    <textarea
+                      class="form-control"
+                      rows="3"
+                      id="ms-form-bio"
+                      v-model="user.bio"
+                      placeholder="Type to add a bio. Go ahead, make my day."
+                    ></textarea>
+                  </div>
+                </div>
+                <div class="form-group label-floating" v-if="showFavorite">
+                  <div class="input-group">
+                    <label class="control-label" for="addon2">Find a show</label>
+                    <input
+                      type="text"
+                      id="addon2"
+                      class="form-control"
+                      list="titles"
+                      v-model="favoriteMedia"
+                      autocomplete="off"
+                    />
+                  </div>
+                  <datalist id="titles">
+                    <option v-for="media in allMedia" :key="media.id">
+                      {{ media.title }}
+                    </option>
+                  </datalist>
+                </div>
+                <div class="form-group label-floating" v-if="!showFavorite">
+                  <div class="input-group">
+                    <button
+                      class="btn btn-raised btn-primary"
+                      v-on:click="addFavorite()"
+                      type="button"
+                      v-if="!user.favorite_media"
+                    >
+                      <i class="zmdi zmdi-play"></i>
+                      Add Favorite Show
+                    </button>
+                    <button class="btn btn-raised btn-primary" v-on:click="addFavorite()" type="button" v-else>
+                      <i class="zmdi zmdi-play"></i>
+                      Add Favorite Show
+                    </button>
+                  </div>
+                </div>
+                <div class="form-group label-floating">
+                  <div class="input-group" v-if="!user.trello">
+                    <button
+                      class="btn btn-raised btn-linkedin"
+                      data-toggle="tooltip"
+                      data-placement="top"
+                      title="Enabling Trello integration allows automatic syncing of watchlist data to a Trello board for added convenience"
+                      type="button"
+                      v-on:click="addTrello()"
+                      :disabled="trello"
+                    >
+                      <i class="fa fa-trello"></i>
+                      Add Trello
+                    </button>
+                  </div>
+                  <div class="input-group" v-else>
+                    <button
+                      class="btn btn-raised btn-danger"
+                      data-toggle="tooltip"
+                      data-placement="top"
+                      title="Removing Trello integration will delete your &quot;It's Over, Isn't It&quot; board on Trello."
+                      type="button"
+                      v-on:click="removeTrello()"
+                      :disabled="!trello"
+                    >
+                      <i class="fa fa-trello"></i>
+                      Remove Trello
+                    </button>
+                  </div>
+                </div>
+                <div class="form-group label-floating">
+                  <div class="input-group">
+                    <div class="checkbox ">
+                      <label>
+                        <input type="checkbox" autocomplete="off" v-model="user.profanity_filter" />
+                        <span class="checkbox-material"><span class="check"></span></span>
+                        Enable profanity filter?
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-raised btn-primary" value="Update">
+                  Save changes
+                </button>
+              </div>
+            </fieldset>
+          </form>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
