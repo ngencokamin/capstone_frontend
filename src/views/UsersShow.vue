@@ -52,12 +52,12 @@
               </button>
             </div>
             <div class="col-lg-12 col-md-6 order-md-2 order-lg-3">
-              <div class="card animated fadeInUp animation-delay-12">
+              <div class="card animated fadeInUp animation-delay-12 ">
                 <div class="ms-hero-bg-info ms-hero-img-mountain">
                   <h3 class="color-white index-1 text-center pb-4 pt-4">Favorite Show</h3>
                 </div>
                 <div class="card-body text-center" v-if="user.favorite_media">
-                  <img :src="user.favorite_media.poster" alt="Poster for user.favorite_media" />
+                  <img class="img-fluid" :src="user.favorite_media.poster" alt="Poster for user.favorite_media" />
                   <br />
                   <small>
                     <b>
