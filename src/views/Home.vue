@@ -20,9 +20,18 @@
       <div class="form-group label-floating">
         <label class="control-label" for="addon2">Find or add a show</label>
         <div class="input-group">
-          <input type="text" id="addon2" class="form-control" list="titles" v-model="filter" autocomplete="off"/>
+          <input
+            type="text"
+            id="addon2"
+            class="form-control"
+            list="titles"
+            v-model="filter"
+            autocomplete="off"
+          />
           <span class="input-group-btn">
-            <router-link :to="{ path: '/media/new', query: { search: filter } }">
+            <router-link
+              :to="{ path: '/media/new', query: { search: filter } }"
+            >
               <button type="button" class="btn btn-fab btn-fab-mini">
                 <i class="material-icons">search</i>
               </button>
@@ -44,12 +53,18 @@
             enter-active-class="animated fadeIn"
             leave-active-class="animated fadeOut"
           >
-            <div class="col-lg-4 col-md-6" v-for="media in filterBy(media, filter)" :key="media.id">
+            <div
+              class="col-lg-4 col-md-6"
+              v-for="media in filterBy(media, filter)"
+              :key="media.id"
+            >
               <div class="card width-auto">
                 <img :src="media.poster" alt="Poster for media" />
                 <br />
                 <small>
-                  <b>Rated {{ media.rated }} | Released: {{ media.released }}</b>
+                  <b
+                    >Rated {{ media.rated }} | Released: {{ media.released }}</b
+                  >
                 </small>
                 <div class="card-body overflow-hidden text-center">
                   <h2 class="color-primary">{{ media.title }}</h2>
@@ -69,6 +84,43 @@
           </div>
         </div>
       </div>
+      <div
+        class="modal"
+        id="welcome"
+        tabindex="-1"
+        role="dialog"
+        aria-labelledby="welcomeLabel"
+        ref="welcome"
+      >
+        <div class="modal-dialog animated zoomIn animated-3x modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h3 class="modal-title color-primary" id="welcomeLabel">
+                Modal title
+              </h3>
+              <button
+                type="button"
+                class="close"
+                data-dismiss="modal"
+                aria-label="Close"
+              >
+                <span aria-hidden="true"><i class="zmdi zmdi-close"></i></span>
+              </button>
+            </div>
+            <div class="modal-body">
+              ...
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger" data-dismiss="modal">
+                Close
+              </button>
+              <button type="button" class="btn  btn-primary">
+                Save changes
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -78,6 +130,7 @@
 <script>
 import axios from "axios";
 import Vue2Filters from "vue2-filters";
+import $ from "jquery";
 export default {
   mixins: [Vue2Filters.mixin],
   data: function() {
@@ -87,11 +140,50 @@ export default {
     };
   },
   created: function() {
-    axios.get("/api/media").then(response => {
+    axios.get("/api/media").then((response) => {
       this.media = response.data;
       console.log(response.data);
+      console.log("fuck");
     });
   },
-  methods: {},
+
+  methods: {
+    waitFor: function(conditionFunction) {
+      const poll = (resolve) => {
+        if (conditionFunction()) resolve();
+        else setTimeout((_) => poll(resolve), 400);
+      };
+
+      return new Promise(poll);
+    },
+    welcomeModal: function() {
+      if (this.getCookie("hideTutorial") != "yes") {
+        $("#welcome").modal("show");
+      }
+    },
+    getCookie: function(c_name) {
+      var c_value = document.cookie;
+      var c_start = c_value.indexOf(" " + c_name + "=");
+      if (c_start == -1) {
+        c_start = c_value.indexOf(c_name + "=");
+      }
+      if (c_start == -1) {
+        c_value = null;
+      } else {
+        c_start = c_value.indexOf("=", c_start) + 1;
+        var c_end = c_value.indexOf(";", c_start);
+        if (c_end == -1) {
+          c_end = c_value.length;
+        }
+        c_value = unescape(c_value.substring(c_start, c_end));
+      }
+      return c_value;
+    },
+  },
+  mounted() {
+    this.waitFor((_) => this.media).then((_) =>
+      this.welcomeModal()
+    );
+  },
 };
 </script>
