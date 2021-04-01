@@ -45,7 +45,7 @@
                 Log In
               </router-link>
             </li>
-            <li class="nav-item" v-on:click="testUser()" v-if="!loggedIn()">
+            <!-- <li class="nav-item" v-on:click="testUser()" v-if="!loggedIn()">
               <a
                 class="nav-link animated fadeIn animation-delay-7"
                 role="button"
@@ -53,7 +53,7 @@
               >
                 Test User
               </a>
-            </li>
+            </li> -->
             <li class="nav-item" v-if="loggedIn()">
               <router-link
                 class="nav-link animated fadeIn animation-delay-7"
@@ -100,7 +100,7 @@
 <style></style>
 
 <script>
-import axios from "axios"
+// import axios from "axios"
 export default {
   mounted() {
     if (document.getElementById("trello")) return;
@@ -119,48 +119,48 @@ export default {
     trelloListID: function() {
       return localStorage.getItem("trelloListID");
     },
-    testUser: function() {
-      var params = {
-        email: "test@email.com",
-        password: "password",
-      };
-      axios
-        .post("/api/sessions", params)
-        .then((response) => {
-          axios.defaults.headers.common["Authorization"] =
-            "Bearer " + response.data.jwt;
-          localStorage.setItem("jwt", response.data.jwt);
-          localStorage.setItem("user_id", response.data.user_id);
-          if (response.data.trello) {
-            localStorage.setItem("trelloListID", response.data.trello);
-            window.Trello.authorize({
-              type: "popup",
-              name: "Getting Started Application",
-              scope: {
-                read: "true",
-                write: "true",
-              },
-              expiration: "never",
-              success: authenticationSuccess,
-              error: authenticationFailure,
-            });
-          }
-          this.$router.push("/users/5");
-        })
-        .catch((error) => {
-          console.log(error.response);
-          this.errors = ["Invalid email or password."];
-          this.email = "";
-          this.password = "";
-        });
-      var authenticationSuccess = function() {
-        console.log("Successful authentication");
-      };
+    // testUser: function() {
+    //   var params = {
+    //     email: "test@email.com",
+    //     password: "password",
+    //   };
+    //   axios
+    //     .post("/api/sessions", params)
+    //     .then((response) => {
+    //       axios.defaults.headers.common["Authorization"] =
+    //         "Bearer " + response.data.jwt;
+    //       localStorage.setItem("jwt", response.data.jwt);
+    //       localStorage.setItem("user_id", response.data.user_id);
+    //       if (response.data.trello) {
+    //         localStorage.setItem("trelloListID", response.data.trello);
+    //         window.Trello.authorize({
+    //           type: "popup",
+    //           name: "Getting Started Application",
+    //           scope: {
+    //             read: "true",
+    //             write: "true",
+    //           },
+    //           expiration: "never",
+    //           success: authenticationSuccess,
+    //           error: authenticationFailure,
+    //         });
+    //       }
+    //       this.$router.push("/users/5");
+    //     })
+    //     .catch((error) => {
+    //       console.log(error.response);
+    //       this.errors = ["Invalid email or password."];
+    //       this.email = "";
+    //       this.password = "";
+    //     });
+    //   var authenticationSuccess = function() {
+    //     console.log("Successful authentication");
+    //   };
 
-      var authenticationFailure = function() {
-        console.log("Failed authentication");
-      };
-    },
+    //   var authenticationFailure = function() {
+    //     console.log("Failed authentication");
+    //   };
+    // },
   },
 };
 </script>
