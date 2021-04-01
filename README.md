@@ -4,6 +4,10 @@
 
 **It's Over, Isn't It?** is a web app that allows users to find shows similar to ones they’ve previously enjoyed. The site is built with a Ruby on Rails backend and VueJS frontend with OMDB api integration. Users can go to the page of a show they enjoyed and make suggestions, rated on both enjoyability and similarity to the original show. Suggestions will also include a brief description of what the users liked and didn’t like in the suggested show. Suggestions can then be voted down or up depending on if other users liked the suggestion. OMBD integration allows for new shows to be added to the database quickly and accurately as needed. 
 
+[Video presentation](https://youtu.be/CJyzOZ6Vyxw?t=1312) | [Live demo](https://itsover.netlify.app/) 
+
+Demo status: [![Netlify Status](https://api.netlify.com/api/v1/badges/ca838d52-2200-478f-a753-a1550baeff02/deploy-status)](https://app.netlify.com/sites/itsover/deploys)
+
 ## Features
 
 - Homepage shows list of all shows currently in database
