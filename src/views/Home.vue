@@ -24,7 +24,7 @@
           <span class="input-group-btn">
             <router-link :to="{ path: '/media/new', query: { search: filter } }">
               <button type="button" class="btn btn-fab btn-fab-mini">
-                <i class="material-icons">add</i>
+                <i class="material-icons">search</i>
               </button>
             </router-link>
           </span>
