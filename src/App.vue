@@ -145,20 +145,25 @@
           <div class="modal-body">
             <p>
               This video offers a brief walkthrough of the functionality and
-              features of the site. NOTE: This message will only show once, but
-              can be summoned again at anytime by clicking the "?" icon in the
-              bottom left.
+              features of the site.
             </p>
+
             <div class="modal-content">
               <video poster="./assets/itsoverthumbnail.png" controls>
                 <source src="./assets/itsover.mp4" type="video/mp4" />
               </video>
             </div>
             <div class="text-center">
-              <small
-                >Please note that some updates have taken place since the video
-                was recorded, so there may be some slight variations.</small
-              >
+              <br />
+              <small>
+                <strong
+                  >Please note that some updates have taken place since the
+                  video was recorded, so there may be some slight variations.
+                  This message will only show once, but can be summoned again at
+                  anytime by clicking the "?" icon in the bottom left of the
+                  site.</strong
+                >
+              </small>
             </div>
           </div>
         </div>
