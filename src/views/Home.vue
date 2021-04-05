@@ -24,7 +24,6 @@
             type="text"
             id="addon2"
             class="form-control"
-            list="titles"
             v-model="filter"
             autocomplete="off"
           />
@@ -39,11 +38,11 @@
           </span>
         </div>
       </div>
-      <datalist id="titles">
+      <!-- <datalist id="titles">
         <option v-for="media in media" :key="media.id">
           {{ media.title }}
         </option>
-      </datalist>
+      </datalist> -->
       <div class="row">
         <div class="col-md-12">
           <div
@@ -92,11 +91,14 @@
         aria-labelledby="welcomeLabel"
         ref="welcome"
       >
-        <div class="modal-dialog animated zoomIn animated-3x modal-lg" role="document">
+        <div
+          class="modal-dialog animated zoomIn animated-3x modal-lg"
+          role="document"
+        >
           <div class="modal-content">
             <div class="modal-header">
               <h3 class="modal-title color-primary" id="welcomeLabel">
-                Modal title
+                Welcome!
               </h3>
               <button
                 type="button"
@@ -108,15 +110,24 @@
               </button>
             </div>
             <div class="modal-body">
-              ...
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-danger" data-dismiss="modal">
-                Close
-              </button>
-              <button type="button" class="btn  btn-primary">
-                Save changes
-              </button>
+              <p>
+                This video offers a brief walkthrough of the functionality and
+                features of the site. NOTE: This message will only show once,
+                but can be summoned again at anytime by clicking the "?" icon in
+                the bottom left.
+              </p>
+              <div class="modal-content">
+                <video poster="../assets/itsoverthumbnail.png" controls>
+                  <source src="../assets/itsover.mp4" type="video/mp4" />
+                </video>
+              </div>
+              <div class="text-center">
+                <small
+                  >Please note that some updates have taken place since the
+                  video was recorded, so there may be some slight
+                  variations.</small
+                >
+              </div>
             </div>
           </div>
         </div>
@@ -143,7 +154,6 @@ export default {
     axios.get("/api/media").then((response) => {
       this.media = response.data;
       console.log(response.data);
-      console.log("fuck");
     });
   },
 
@@ -157,9 +167,15 @@ export default {
       return new Promise(poll);
     },
     welcomeModal: function() {
-      if (this.getCookie("hideTutorial") != "yes") {
-        $("#welcome").modal("show");
-      }
+      $("#welcome").modal("show");
+    },
+    setCookie: function(c_name, value, exdays) {
+      var exdate = new Date();
+      exdate.setDate(exdate.getDate() + exdays);
+      var c_value =
+        escape(value) +
+        (exdays == null ? "" : "; expires=" + exdate.toUTCString());
+      document.cookie = c_name + "=" + c_value;
     },
     getCookie: function(c_name) {
       var c_value = document.cookie;
@@ -181,9 +197,12 @@ export default {
     },
   },
   mounted() {
-    this.waitFor((_) => this.media).then((_) =>
-      this.welcomeModal()
-    );
+    if (this.getCookie("hideTutorial") != "yes") {
+      this.waitFor((_) => this.media).then(
+        (_) => this.welcomeModal(),
+        this.setCookie("hideTutorial", "yes", 365)
+      );
+    }
   },
 };
 </script>
