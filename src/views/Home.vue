@@ -83,55 +83,6 @@
           </div>
         </div>
       </div>
-      <div
-        class="modal"
-        id="welcome"
-        tabindex="-1"
-        role="dialog"
-        aria-labelledby="welcomeLabel"
-        ref="welcome"
-      >
-        <div
-          class="modal-dialog animated zoomIn animated-3x modal-lg"
-          role="document"
-        >
-          <div class="modal-content">
-            <div class="modal-header">
-              <h3 class="modal-title color-primary" id="welcomeLabel">
-                Welcome!
-              </h3>
-              <button
-                type="button"
-                class="close"
-                data-dismiss="modal"
-                aria-label="Close"
-              >
-                <span aria-hidden="true"><i class="zmdi zmdi-close"></i></span>
-              </button>
-            </div>
-            <div class="modal-body">
-              <p>
-                This video offers a brief walkthrough of the functionality and
-                features of the site. NOTE: This message will only show once,
-                but can be summoned again at anytime by clicking the "?" icon in
-                the bottom left.
-              </p>
-              <div class="modal-content">
-                <video poster="../assets/itsoverthumbnail.png" controls>
-                  <source src="../assets/itsover.mp4" type="video/mp4" />
-                </video>
-              </div>
-              <div class="text-center">
-                <small
-                  >Please note that some updates have taken place since the
-                  video was recorded, so there may be some slight
-                  variations.</small
-                >
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
 </template>
@@ -141,7 +92,7 @@
 <script>
 import axios from "axios";
 import Vue2Filters from "vue2-filters";
-import $ from "jquery";
+// import $ from "jquery";
 export default {
   mixins: [Vue2Filters.mixin],
   data: function() {
@@ -166,9 +117,7 @@ export default {
 
       return new Promise(poll);
     },
-    welcomeModal: function() {
-      $("#welcome").modal("show");
-    },
+
     setCookie: function(c_name, value, exdays) {
       var exdate = new Date();
       exdate.setDate(exdate.getDate() + exdays);
@@ -199,7 +148,7 @@ export default {
   mounted() {
     if (this.getCookie("hideTutorial") != "yes") {
       this.waitFor((_) => this.media).then(
-        (_) => this.welcomeModal(),
+        (_) => this.$parent.welcomeModal(),
         this.setCookie("hideTutorial", "yes", 365)
       );
     }

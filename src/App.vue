@@ -94,6 +94,76 @@
         <p>Copyright &copy; Material Style 2017</p>
       </div>
     </footer> -->
+    <div class="btn-back-top">
+      <a
+        href="#"
+        data-scroll
+        id="back-top"
+        class="btn-circle btn-circle-primary btn-circle-sm btn-circle-raised "
+      >
+        <i class="zmdi zmdi-long-arrow-up"></i>
+      </a>
+    </div>
+    <div
+      class="fixed-bottom position-sticky px-4 py-3 animated fadeInUp animation-delay-7"
+    >
+      <button
+        data-scroll
+        v-on:click="welcomeModal()"
+        id="back-top"
+        class="btn-circle btn-circle-primary btn-circle-md btn-circle-raised "
+      >
+        <i class="fa fa-question fa-lg"></i>
+      </button>
+    </div>
+    <div
+      class="modal"
+      id="welcome"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="welcomeLabel"
+      ref="welcome"
+    >
+      <div
+        class="modal-dialog animated zoomIn animated-3x modal-lg"
+        role="document"
+      >
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3 class="modal-title color-primary" id="welcomeLabel">
+              Welcome!
+            </h3>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true"><i class="zmdi zmdi-close"></i></span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p>
+              This video offers a brief walkthrough of the functionality and
+              features of the site. NOTE: This message will only show once, but
+              can be summoned again at anytime by clicking the "?" icon in the
+              bottom left.
+            </p>
+            <div class="modal-content">
+              <video poster="./assets/itsoverthumbnail.png" controls>
+                <source src="./assets/itsover.mp4" type="video/mp4" />
+              </video>
+            </div>
+            <div class="text-center">
+              <small
+                >Please note that some updates have taken place since the video
+                was recorded, so there may be some slight variations.</small
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -101,6 +171,7 @@
 
 <script>
 // import axios from "axios"
+import $ from "jquery";
 export default {
   mounted() {
     if (document.getElementById("trello")) return;
@@ -119,48 +190,9 @@ export default {
     trelloListID: function() {
       return localStorage.getItem("trelloListID");
     },
-    // testUser: function() {
-    //   var params = {
-    //     email: "test@email.com",
-    //     password: "password",
-    //   };
-    //   axios
-    //     .post("/api/sessions", params)
-    //     .then((response) => {
-    //       axios.defaults.headers.common["Authorization"] =
-    //         "Bearer " + response.data.jwt;
-    //       localStorage.setItem("jwt", response.data.jwt);
-    //       localStorage.setItem("user_id", response.data.user_id);
-    //       if (response.data.trello) {
-    //         localStorage.setItem("trelloListID", response.data.trello);
-    //         window.Trello.authorize({
-    //           type: "popup",
-    //           name: "Getting Started Application",
-    //           scope: {
-    //             read: "true",
-    //             write: "true",
-    //           },
-    //           expiration: "never",
-    //           success: authenticationSuccess,
-    //           error: authenticationFailure,
-    //         });
-    //       }
-    //       this.$router.push("/users/5");
-    //     })
-    //     .catch((error) => {
-    //       console.log(error.response);
-    //       this.errors = ["Invalid email or password."];
-    //       this.email = "";
-    //       this.password = "";
-    //     });
-    //   var authenticationSuccess = function() {
-    //     console.log("Successful authentication");
-    //   };
-
-    //   var authenticationFailure = function() {
-    //     console.log("Failed authentication");
-    //   };
-    // },
+    welcomeModal: function() {
+      $("#welcome").modal("show");
+    },
   },
 };
 </script>
