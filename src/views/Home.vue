@@ -20,9 +20,17 @@
       <div class="form-group label-floating">
         <label class="control-label" for="addon2">Find or add a show</label>
         <div class="input-group">
-          <input type="text" id="addon2" class="form-control" list="titles" v-model="filter" autocomplete="off"/>
+          <input
+            type="text"
+            id="addon2"
+            class="form-control"
+            v-model="filter"
+            autocomplete="off"
+          />
           <span class="input-group-btn">
-            <router-link :to="{ path: '/media/new', query: { search: filter } }">
+            <router-link
+              :to="{ path: '/media/new', query: { search: filter } }"
+            >
               <button type="button" class="btn btn-fab btn-fab-mini">
                 <i class="material-icons">search</i>
               </button>
@@ -30,11 +38,11 @@
           </span>
         </div>
       </div>
-      <datalist id="titles">
+      <!-- <datalist id="titles">
         <option v-for="media in media" :key="media.id">
           {{ media.title }}
         </option>
-      </datalist>
+      </datalist> -->
       <div class="row">
         <div class="col-md-12">
           <div
@@ -44,12 +52,18 @@
             enter-active-class="animated fadeIn"
             leave-active-class="animated fadeOut"
           >
-            <div class="col-lg-4 col-md-6" v-for="media in filterBy(media, filter)" :key="media.id">
+            <div
+              class="col-lg-4 col-md-6"
+              v-for="media in filterBy(media, filter)"
+              :key="media.id"
+            >
               <div class="card width-auto">
                 <img :src="media.poster" alt="Poster for media" />
                 <br />
                 <small>
-                  <b>Rated {{ media.rated }} | Released: {{ media.released }}</b>
+                  <b
+                    >Rated {{ media.rated }} | Released: {{ media.released }}</b
+                  >
                 </small>
                 <div class="card-body overflow-hidden text-center">
                   <h2 class="color-primary">{{ media.title }}</h2>
@@ -78,6 +92,7 @@
 <script>
 import axios from "axios";
 import Vue2Filters from "vue2-filters";
+// import $ from "jquery";
 export default {
   mixins: [Vue2Filters.mixin],
   data: function() {
@@ -87,11 +102,56 @@ export default {
     };
   },
   created: function() {
-    axios.get("/api/media").then(response => {
+    axios.get("/api/media").then((response) => {
       this.media = response.data;
       console.log(response.data);
     });
   },
-  methods: {},
+
+  methods: {
+    waitFor: function(conditionFunction) {
+      const poll = (resolve) => {
+        if (conditionFunction()) resolve();
+        else setTimeout((_) => poll(resolve), 400);
+      };
+
+      return new Promise(poll);
+    },
+
+    setCookie: function(c_name, value, exdays) {
+      var exdate = new Date();
+      exdate.setDate(exdate.getDate() + exdays);
+      var c_value =
+        escape(value) +
+        (exdays == null ? "" : "; expires=" + exdate.toUTCString());
+      document.cookie = c_name + "=" + c_value;
+    },
+    getCookie: function(c_name) {
+      var c_value = document.cookie;
+      var c_start = c_value.indexOf(" " + c_name + "=");
+      if (c_start == -1) {
+        c_start = c_value.indexOf(c_name + "=");
+      }
+      if (c_start == -1) {
+        c_value = null;
+      } else {
+        c_start = c_value.indexOf("=", c_start) + 1;
+        var c_end = c_value.indexOf(";", c_start);
+        if (c_end == -1) {
+          c_end = c_value.length;
+        }
+        c_value = unescape(c_value.substring(c_start, c_end));
+      }
+      return c_value;
+    },
+  },
+  mounted() {
+    if (this.getCookie("hideTutorial") != "yes") {
+      this.waitFor((_) => this.media).then(
+        (_) => this.$parent.welcomeModal(),
+        this.setCookie("hideTutorial", "yes", 365)
+      );
+    }
+  },
 };
 </script>
