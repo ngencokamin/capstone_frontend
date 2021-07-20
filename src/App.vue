@@ -149,7 +149,11 @@
             </p>
 
             <div class="modal-content">
-              <video poster="./assets/itsoverthumbnail.png" controls>
+              <video
+                v-if="modalVideo"
+                poster="./assets/itsoverthumbnail.png"
+                controls
+              >
                 <source src="./assets/itsover.mp4" type="video/mp4" />
               </video>
             </div>
@@ -178,6 +182,11 @@
 // import axios from "axios"
 import $ from "jquery";
 export default {
+  data: function() {
+    return {
+      modalVideo: false,
+    };
+  },
   mounted() {
     if (document.getElementById("trello")) return;
     var scriptTag = document.createElement("script");
@@ -197,6 +206,11 @@ export default {
     },
     welcomeModal: function() {
       $("#welcome").modal("show");
+    },
+    modalOpen: function() {
+      // return $("#myModal").hasClass("in");
+      console.log($("#myModal").hasClass("in"));
+      // return $("element").data("bs.modal")?._isShown;
     },
   },
 };
